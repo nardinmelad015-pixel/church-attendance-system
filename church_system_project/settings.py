@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "192.168.100.6",
+    "nardin.pythonanywhere.com",
 ]
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
