@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تسجيل الحضور</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<h2>
+    تسجيل حضور:
+    {{ meeting.title }}
+</h2>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button
+        type="submit"
+        class="btn btn-success"
+    >
+        تسجيل الحضور
+    </button>
+
+</form>
+
+</body>
+</html>

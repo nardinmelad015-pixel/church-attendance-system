@@ -1,0 +1,706 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قائمة الخدام</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ═══════════════════════════════════════
+   ROOT TOKENS
+═══════════════════════════════════════ */
+:root {
+    --bg:          #020c1e;
+    --bg2:         #0a1628;
+    --sidebar:     #060f20;
+    --card:        #0d1e38;
+    --card-hover:  #112340;
+    --card-border: rgba(212,168,67,.12);
+    --text:        #eef2ff;
+    --text-muted:  #7a92b8;
+    --accent:      #3b82f6;
+    --gold:        #d4a843;
+    --gold-lt:     #f0cd7a;
+    --success:     #22c55e;
+    --danger:      #ef4444;
+    --warning:     #f59e0b;
+    --sb-track:    #060f20;
+    --sb-thumb:    rgba(212,168,67,.25);
+}
+
+body.light {
+    --bg:          #eef4ff;
+    --bg2:         #e2ecff;
+    --sidebar:     #ffffff;
+    --card:        #ffffff;
+    --card-hover:  #f0f6ff;
+    --card-border: rgba(37,99,235,.12);
+    --text:        #0f172a;
+    --text-muted:  #5a7aaa;
+    --gold:        #b8860b;
+    --gold-lt:     #d4a843;
+    --sb-track:    #e2ecff;
+    --sb-thumb:    rgba(37,99,235,.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Cairo', sans-serif;
+    transition: background .4s, color .4s;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Stars background */
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background:
+        radial-gradient(1.5px 1.5px at 5%  4%,  rgba(255,255,255,.8) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 11% 12%, rgba(255,255,230,.6) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 20% 3%,  rgba(255,255,255,.9) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 33% 9%,  rgba(200,230,255,.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 6%,  rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 60% 14%, rgba(255,240,200,.7) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 73% 5%,  rgba(255,255,255,.85)0%, transparent 100%),
+        radial-gradient(1px   1px   at 85% 10%, rgba(200,220,255,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 93% 3%,  rgba(255,255,255,.75)0%, transparent 100%),
+        radial-gradient(1px   1px   at 15% 20%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 40% 18%, rgba(255,240,180,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 68% 22%, rgba(255,255,255,.65)0%, transparent 100%),
+        radial-gradient(1px   1px   at 90% 17%, rgba(200,230,255,.55)0%, transparent 100%);
+    animation: starsTwinkle 7s ease-in-out infinite alternate;
+    transition: opacity .5s;
+}
+body.light::before { opacity: 0; }
+
+@keyframes starsTwinkle {
+    0%   { opacity: .6; }
+    100% { opacity: 1;  }
+}
+
+/* Moon */
+body::after {
+    content: "";
+    position: fixed;
+    top: 18px; right: 280px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffde7, #f5d060 60%, #d4a843);
+    box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12);
+    pointer-events: none; z-index: 0;
+    transition: opacity .5s, transform .5s;
+    animation: moonPulse 8s ease-in-out infinite;
+}
+body.light::after { opacity: 0; transform: scale(.3); }
+
+@keyframes moonPulse {
+    0%,100% { box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12); }
+    50%      { box-shadow: 0 0 28px 10px rgba(255,230,100,.5), 0 0 75px 25px rgba(255,210,70,.22); }
+}
+
+/* Church silhouette */
+.church-strip {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 110px; pointer-events: none; z-index: 0;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding-right: 260px;
+    opacity: .18; transition: opacity .4s;
+}
+body.light .church-strip { opacity: .07; }
+
+.cs-tower { display: flex; flex-direction: column; align-items: center; width: 42px; }
+.cs-steeple { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 28px solid var(--gold); }
+.cs-cross { width: 10px; height: 14px; position: relative; z-index: 2; margin-bottom: -3px; }
+.cs-cross::before { content: ""; position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 2px; height: 100%; background: var(--gold); }
+.cs-cross::after  { content: ""; position: absolute; left: 0; top: 35%; width: 100%; height: 2px; background: var(--gold); }
+.cs-tower-body { width: 38px; height: 64px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-body { display: flex; flex-direction: column; align-items: center; width: 110px; }
+.cs-roof { width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 36px solid var(--gold); }
+.cs-facade { width: 110px; height: 96px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-ground { position: fixed; bottom: 0; left: 0; right: 0; height: 8px; background: var(--gold); opacity: .1; z-index: 0; pointer-events: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--sb-track); }
+::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 99px; }
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar {
+    position: fixed; right: 0; top: 0;
+    width: 260px; height: 100vh;
+    background: var(--sidebar);
+    border-left: 1px solid var(--card-border);
+    padding: 0 0 24px; z-index: 100;
+    overflow-y: auto; display: flex; flex-direction: column;
+    transition: background .4s;
+}
+.sidebar::before { content: ""; display: block; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); flex-shrink: 0; }
+
+.sidebar .brand {
+    padding: 22px 20px 18px;
+    font-family: 'Amiri', serif; font-size: 1.1rem; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 8px;
+}
+
+.sidebar a {
+    display: flex; align-items: center; gap: 11px;
+    color: var(--text); text-decoration: none;
+    padding: 10px 20px; margin: 2px 12px;
+    border-radius: 12px; font-size: .88rem; font-weight: 500;
+    transition: background .2s, color .2s, transform .2s;
+}
+.sidebar a i { width: 18px; text-align: center; opacity: .7; }
+.sidebar a:hover { background: rgba(212,168,67,.1); color: var(--gold); transform: translateX(-3px); }
+.sidebar a:hover i { opacity: 1; }
+.sidebar a.active { background: linear-gradient(90deg, rgba(212,168,67,.18), rgba(212,168,67,.06)); color: var(--gold); border-right: 2px solid var(--gold); }
+.sidebar a.active i { opacity: 1; }
+
+.sidebar .sidebar-section { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); margin: 16px 20px 6px; opacity: .6; }
+.sidebar-cross { margin: auto 0 0; padding: 14px 20px 0; text-align: center; opacity: .12; font-size: 1.5rem; color: var(--gold); border-top: 1px solid var(--card-border); }
+
+/* ═══════════════════════════════════════
+   TOP NAVBAR
+═══════════════════════════════════════ */
+.top-navbar {
+    position: sticky; top: 0; z-index: 90;
+    margin-right: 260px;
+    background: rgba(6,15,32,.85);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    transition: background .4s;
+}
+body.light .top-navbar { background: rgba(255,255,255,.85); }
+
+.top-navbar .brand-nav { font-family: 'Amiri', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+.top-navbar .nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-logo { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--card-border); object-fit: contain; background: rgba(212,168,67,.07); }
+
+.btn-bell { position: relative; background: var(--card); border: 1px solid var(--card-border); color: var(--text); border-radius: 10px; width: 40px; height: 40px; cursor: pointer; font-size: .95rem; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.btn-bell:hover { background: rgba(212,168,67,.12); border-color: rgba(212,168,67,.3); }
+.badge-bell { position: absolute; top: -5px; left: -5px; background: var(--danger); border-radius: 99px; font-size: .62rem; padding: 1px 5px; color: #fff; font-weight: 700; line-height: 1.4; }
+
+.nav-user { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 6px 14px; font-size: .85rem; font-weight: 600; }
+
+.btn-logout { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); color: #f87171; border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; transition: background .2s; }
+.btn-logout:hover { background: rgba(239,68,68,.22); }
+
+/* ═══════════════════════════════════════
+   MAIN
+═══════════════════════════════════════ */
+.main { margin-right: 260px; padding: 28px 30px 100px; min-height: 100vh; position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════ */
+.page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 14px; margin-bottom: 24px;
+}
+
+.page-title {
+    font-family: 'Amiri', serif; font-size: 1.55rem; font-weight: 700;
+    color: var(--text); display: flex; align-items: center; gap: 10px; margin: 0;
+}
+.page-title::before { content: "✦"; color: var(--gold); font-size: .9rem; opacity: .7; }
+
+.page-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* ═══════════════════════════════════════
+   SEARCH + FILTERS BAR
+═══════════════════════════════════════ */
+.filter-bar-top {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; margin-bottom: 20px;
+}
+
+.search-box {
+    background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 12px;
+    padding: 9px 16px; font-size: .88rem; outline: none;
+    font-family: 'Cairo', sans-serif; min-width: 240px;
+    transition: border .25s, box-shadow .25s;
+}
+.search-box::placeholder { color: var(--text-muted); }
+.search-box:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.18); }
+
+.filter-select {
+    background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 12px;
+    padding: 9px 16px; font-size: .88rem; outline: none;
+    font-family: 'Cairo', sans-serif; cursor: pointer;
+    transition: border .25s;
+}
+.filter-select:focus { border-color: var(--gold); }
+
+/* ═══════════════════════════════════════
+   STATS ROW
+═══════════════════════════════════════ */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 14px; margin-bottom: 22px; }
+
+.stat-mini {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 18px 16px; text-align: center;
+    position: relative; overflow: hidden;
+    transition: transform .3s, box-shadow .3s;
+}
+.stat-mini:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.22); }
+.stat-mini::before { content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg,transparent,rgba(212,168,67,.35),transparent); }
+
+.stat-mini .s-icon { font-size: 1.3rem; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.stat-mini .s-label { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; font-weight: 700; margin-bottom: 5px; }
+.stat-mini .s-value { font-size: 2rem; font-weight: 900; line-height: 1; }
+
+/* ═══════════════════════════════════════
+   GLASS CARD
+═══════════════════════════════════════ */
+.glass {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 18px; padding: 22px 24px;
+    position: relative; overflow: hidden;
+    transition: background .35s, border .35s, box-shadow .3s;
+}
+.glass::before { content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg,transparent,rgba(212,168,67,.4),transparent); }
+.glass h4 { font-size: .95rem; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; color: var(--text); }
+
+/* ═══════════════════════════════════════
+   TABLE
+═══════════════════════════════════════ */
+.table { color: var(--text); margin-bottom: 0; }
+.table th { color: var(--text-muted); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; border-color: var(--card-border); font-weight: 700; padding: 10px 14px; background: transparent; }
+.table td { border-color: var(--card-border); vertical-align: middle; padding: 11px 14px; font-size: .88rem; }
+.table tbody tr { transition: background .2s; }
+.table tbody tr:hover { background: rgba(212,168,67,.04); }
+
+/* Avatar */
+.servant-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(212,168,67,.15); color: var(--gold);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .85rem; font-weight: 700; flex-shrink: 0; margin-left: 10px;
+    border: 1.5px solid rgba(212,168,67,.25);
+}
+
+.servant-link { color: var(--gold); text-decoration: none; font-weight: 600; transition: color .2s; }
+.servant-link:hover { color: var(--gold-lt); text-decoration: underline; }
+
+/* Level badge */
+.level-badge {
+    background: rgba(212,168,67,.1); color: var(--gold);
+    border: 1px solid rgba(212,168,67,.22);
+    border-radius: 8px; padding: 3px 10px; font-size: .76rem; font-weight: 600;
+}
+
+/* Status badges */
+.badge-active   { background: rgba(34,197,94,.14);  color: #22c55e; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-inactive { background: rgba(239,68,68,.14);  color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+
+/* Attendance mini bar */
+.rate-cell { display: flex; align-items: center; gap: 8px; min-width: 130px; }
+.progress { background: rgba(255,255,255,.07); border-radius: 99px; height: 8px; flex: 1; }
+.progress-bar { border-radius: 99px; }
+
+/* ═══════════════════════════════════════
+   ACTION BUTTONS
+═══════════════════════════════════════ */
+.btn-add {
+    background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+    color: #1a0f00; border: none; border-radius: 12px;
+    padding: 9px 20px; font-size: .88rem; font-weight: 700;
+    font-family: 'Cairo', sans-serif; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px;
+    text-decoration: none;
+    transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 4px 18px rgba(212,168,67,.35);
+}
+.btn-add:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,168,67,.5); color: #1a0f00; }
+
+.btn-icon-sm {
+    background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 8px; padding: 5px 10px;
+    font-size: .78rem; cursor: pointer; font-family: 'Cairo', sans-serif;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 5px;
+    transition: background .2s, border .2s, color .2s;
+    font-weight: 600;
+}
+.btn-icon-sm.edit  { background: rgba(59,130,246,.1); color: var(--accent); border-color: rgba(59,130,246,.25); }
+.btn-icon-sm.edit:hover  { background: rgba(59,130,246,.22); color: var(--accent); }
+.btn-icon-sm.del   { background: rgba(239,68,68,.09); color: #f87171; border-color: rgba(239,68,68,.22); }
+.btn-icon-sm.del:hover   { background: rgba(239,68,68,.2); color: #f87171; }
+.btn-icon-sm.view  { background: rgba(212,168,67,.1); color: var(--gold); border-color: rgba(212,168,67,.22); }
+.btn-icon-sm.view:hover  { background: rgba(212,168,67,.2); color: var(--gold); }
+
+/* Theme toggle */
+.btn-icon {
+    background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 10px; padding: 8px 14px;
+    cursor: pointer; font-size: .85rem; font-family: 'Cairo', sans-serif;
+    transition: background .2s, border .2s, color .2s;
+}
+.btn-icon:hover { background: rgba(212,168,67,.1); border-color: rgba(212,168,67,.3); color: var(--gold); }
+
+/* ═══════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════ */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-state i { font-size: 2.8rem; display: block; margin-bottom: 14px; opacity: .25; }
+.empty-state p { margin: 0; font-size: .9rem; }
+
+/* Gold divider */
+.gold-divider { height: 1px; background: linear-gradient(90deg,transparent,var(--gold),transparent); opacity: .2; margin: 24px 0; }
+
+/* ═══════════════════════════════════════
+   PAGINATION
+═══════════════════════════════════════ */
+.pagination-wrap { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; flex-wrap: wrap; }
+
+.page-btn {
+    background: var(--card); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 9px;
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    font-size: .85rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: background .2s, border .2s, color .2s;
+}
+.page-btn:hover, .page-btn.active { background: rgba(212,168,67,.15); border-color: rgba(212,168,67,.4); color: var(--gold); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer { text-align: center; margin-top: 50px; padding-bottom: 20px; color: var(--text-muted); font-size: .82rem; }
+footer .footer-cross { display: block; color: var(--gold); opacity: .3; font-size: .9rem; margin-bottom: 6px; letter-spacing: .2em; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+    .sidebar   { display: none; }
+    .top-navbar { margin-right: 0; }
+    .main      { margin-right: 0; padding: 16px 14px 80px; }
+    .church-strip { padding-right: 0; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .page-title { font-size: 1.25rem; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Church silhouette -->
+<div class="church-strip">
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+    <div class="cs-body"><div class="cs-roof"></div><div class="cs-facade"></div></div>
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+</div>
+<div class="cs-ground"></div>
+
+<!-- ════════════ SIDEBAR ════════════ -->
+<div class="sidebar">
+    <div class="brand"><i class="fa fa-church"></i> Church System</div>
+
+    <div class="sidebar-section">القائمة الرئيسية</div>
+    <a href="/dashboard/"><i class="fa fa-chart-line"></i> Dashboard</a>
+    <a href="/attendance/add/"><i class="fa fa-calendar-plus"></i> تسجيل حضور</a>
+    <a href="/attendance/list/"><i class="fa fa-calendar-check"></i> سجل الحضور</a>
+    <a href="/schedule/add/"><i class="fa fa-calendar-check"></i> جدول التحضير</a>
+
+    <div class="sidebar-section">الإدارة</div>
+    <a href="/excuse/list/"><i class="fa fa-file-circle-xmark"></i> الأعذار</a>
+    <a href="/servants/" class="active"><i class="fa fa-users"></i> الخدام</a>
+    <a href="/meetings/"><i class="fa fa-calendar-days"></i>الاجتماعات</a>
+
+    <div class="sidebar-cross">✦ ✝ ✦</div>
+</div>
+
+<!-- ════════════ TOP NAVBAR ════════════ -->
+<div class="top-navbar">
+    <div class="brand-nav">
+        <img src="{% static 'images/logo.png' %}" class="nav-logo" alt="logo">
+        ⛪ Church Attendance System
+    </div>
+    <div class="nav-right">
+        <div class="nav-user">👤 {{ request.user.username }}</div>
+        <form action="/logout/" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">
+                <i class="fa fa-right-from-bracket"></i> خروج
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- ════════════ MAIN ════════════ -->
+<div class="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">قائمة الخدام</h1>
+        <div class="page-actions">
+            <button id="themeToggle" class="btn-icon" title="تغيير المظهر">🌙</button>
+            <a href="{% url 'add_servant' %}" class="btn-add">
+                <i class="fa fa-user-plus"></i> إضافة خادم
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+        <div class="stat-mini">
+            <div class="s-icon" style="background:rgba(59,130,246,.12);">
+                <i class="fa fa-users" style="color:var(--accent);"></i>
+            </div>
+            <div class="s-label">إجمالي الخدام</div>
+            <div class="s-value" style="color:var(--accent);">{{ servants|length }}</div>
+        </div>
+        <div class="stat-mini">
+            <div class="s-icon" style="background:rgba(34,197,94,.12);">
+                <i class="fa fa-circle-check" style="color:#22c55e;"></i>
+            </div>
+            <div class="s-label">نشيطون</div>
+            <div class="s-value" style="color:#22c55e;">
+                {{ servants|length }}
+            </div>
+        </div>
+        <div class="stat-mini">
+            <div class="s-icon" style="background:rgba(212,168,67,.12);">
+                <i class="fa fa-star" style="color:var(--gold);"></i>
+            </div>
+            <div class="s-label">المستوى المتقدم</div>
+            <div class="s-value" style="color:var(--gold);">—</div>
+        </div>
+        <div class="stat-mini">
+            <div class="s-icon" style="background:rgba(245,158,11,.12);">
+                <i class="fa fa-seedling" style="color:#f59e0b;"></i>
+            </div>
+            <div class="s-label">المستوى المبتدئ</div>
+            <div class="s-value" style="color:#f59e0b;">—</div>
+        </div>
+    </div>
+
+    <!-- Search + Filter -->
+    <div class="filter-bar-top">
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 ابحث باسم الخادم...">
+        <select id="levelFilter" class="filter-select">
+            <option value="all">كل المستويات</option>
+            <option value="مبتدئ">مبتدئ</option>
+            <option value="متوسط">متوسط</option>
+            <option value="متقدم">متقدم</option>
+        </select>
+        <select id="statusFilter" class="filter-select">
+            <option value="all">كل الحالات</option>
+            <option value="active">نشط</option>
+            <option value="inactive">غير نشط</option>
+        </select>
+    </div>
+
+    <!-- Servants Table -->
+    <div class="glass">
+        <h4>
+            <i class="fa fa-users" style="color:var(--gold);"></i>
+            الخدام
+            <span style="font-size:.76rem; color:var(--text-muted); font-weight:400; margin-right:auto;">
+                عدد الخدام: <span id="visibleCount">{{ servants|length }}</span>
+            </span>
+        </h4>
+
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0" id="servantsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الخادم</th>
+                        <th>الهاتف</th>
+                        <th>المستوى</th>
+                        <th>الحضور</th>
+                        <th>الغياب</th>
+                        <th>نسبة الحضور</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="servantsBody">
+                    {% for servant in servants %}
+                    <tr class="servant-row"
+                        data-name="{{ servant.name|lower }}"
+                        data-level="{{ servant.level }}"
+                        data-status="active">
+
+                        <td style="color:var(--text-muted); font-size:.83rem;">{{ forloop.counter }}</td>
+
+                        <td>
+                            <div style="display:flex; align-items:center;">
+                                <span class="servant-avatar">{{ servant.name|first|upper }}</span>
+                                <div>
+                                    <a href="/servant/{{ servant.id }}/" class="servant-link">{{ servant.name }}</a>
+                                    {% if servant.email %}
+                                    <div style="font-size:.75rem; color:var(--text-muted); margin-top:2px;">{{ servant.email }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="color:var(--text-muted);">
+                            {% if servant.phone %}{{ servant.phone }}{% else %}—{% endif %}
+                        </td>
+
+                        <td>
+                            <span class="level-badge">{{ servant.level }}</span>
+                        </td>
+
+                        <td style="color:#22c55e; font-weight:700;">
+                            {{ servant.present_count|default:"0" }}
+                        </td>
+
+                        <td style="color:#ef4444; font-weight:700;">
+                            {{ servant.absent_count|default:"0" }}
+                        </td>
+
+                        <td>
+                            <div class="rate-cell">
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                        style="width:{{ servant.attendance_rate|default:0 }}%;
+                                        background:{% if servant.attendance_rate >= 80 %}#22c55e{% elif servant.attendance_rate >= 50 %}#f59e0b{% else %}#ef4444{% endif %};">
+                                    </div>
+                                </div>
+                                <span style="font-size:.78rem; min-width:36px; color:var(--text-muted);">
+                                    {{ servant.attendance_rate|default:0 }}%
+                                </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                                <a href="/servant/{{ servant.id }}/" class="btn-icon-sm view">
+                                    <i class="fa fa-eye"></i> عرض
+                                </a>
+                                <a href="{% url 'edit_servant' servant.id %}">
+    تعديل
+</a>
+                                <a href="{% url 'delete_servant' servant.id %}"class="btn-icon-sm del"
+
+                                    onclick="return confirm('هل أنت متأكد من حذف هذا الخادم؟')">
+    حذف
+</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <i class="fa fa-users-slash"></i>
+                                <p>لا يوجد خدام مضافون بعد</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="gold-divider"></div>
+        <div class="pagination-wrap">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-btn">
+                <i class="fa fa-chevron-right"></i>
+            </a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="page-btn active">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-btn">
+                <i class="fa fa-chevron-left"></i>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div><!-- /glass -->
+
+    <footer>
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System<br>
+        <span style="font-size:.78rem;">Developed by Nardin Melad</span>
+    </footer>
+
+</div><!-- /main -->
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script>
+// Theme toggle
+const toggle = document.getElementById("themeToggle");
+if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light");
+    toggle.innerText = "☀️";
+}
+toggle.onclick = () => {
+    document.body.classList.toggle("light");
+    const isLight = document.body.classList.contains("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    toggle.innerText = isLight ? "☀️" : "🌙";
+};
+</script>
+
+<script>
+// Search + Filter
+function applyFilters() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const level  = document.getElementById("levelFilter").value;
+    const status = document.getElementById("statusFilter").value;
+    const rows   = document.querySelectorAll(".servant-row");
+    let visible  = 0;
+
+    rows.forEach(row => {
+        const name    = row.dataset.name    || "";
+        const rowLvl  = row.dataset.level   || "";
+        const rowStat = row.dataset.status  || "";
+
+        const matchName   = name.includes(search);
+        const matchLevel  = level  === "all" || rowLvl  === level;
+        const matchStatus = status === "all" || rowStat === status;
+
+        const show = matchName && matchLevel && matchStatus;
+        row.style.display = show ? "" : "none";
+        if (show) visible++;
+    });
+
+    const cnt = document.getElementById("visibleCount");
+    if (cnt) cnt.innerText = visible;
+}
+
+document.getElementById("searchInput").addEventListener("keyup", applyFilters);
+document.getElementById("levelFilter").addEventListener("change", applyFilters);
+document.getElementById("statusFilter").addEventListener("change", applyFilters);
+</script>
+
+</body>
+</html>

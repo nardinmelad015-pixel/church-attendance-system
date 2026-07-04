@@ -1,0 +1,271 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حذف خادم</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ═══════════════════════════════════════
+   ROOT TOKENS
+═══════════════════════════════════════ */
+:root {
+    --bg:          #020c1e;
+    --bg2:         #0a1628;
+    --card:        #0d1e38;
+    --card-hover:  #112340;
+    --card-border: rgba(212,168,67,.12);
+    --text:        #eef2ff;
+    --text-muted:  #7a92b8;
+    --accent:      #3b82f6;
+    --gold:        #d4a843;
+    --gold-lt:     #f0cd7a;
+    --success:     #22c55e;
+    --danger:      #ef4444;
+    --warning:     #f59e0b;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Cairo', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Stars background */
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background:
+        radial-gradient(1.5px 1.5px at 5%  4%,  rgba(255,255,255,.8) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 11% 12%, rgba(255,255,230,.6) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 20% 3%,  rgba(255,255,255,.9) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 33% 9%,  rgba(200,230,255,.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 6%,  rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 60% 14%, rgba(255,240,200,.7) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 73% 5%,  rgba(255,255,255,.85)0%, transparent 100%),
+        radial-gradient(1px   1px   at 85% 10%, rgba(200,220,255,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 93% 3%,  rgba(255,255,255,.75)0%, transparent 100%),
+        radial-gradient(1px   1px   at 15% 20%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 40% 18%, rgba(255,240,180,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 68% 22%, rgba(255,255,255,.65)0%, transparent 100%),
+        radial-gradient(1px   1px   at 90% 17%, rgba(200,230,255,.55)0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 25% 35%, rgba(255,255,255,.6) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 55% 40%, rgba(255,240,200,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 80% 32%, rgba(200,230,255,.5) 0%, transparent 100%);
+    animation: starsTwinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes starsTwinkle {
+    0%   { opacity: .6; }
+    100% { opacity: 1;  }
+}
+
+/* Moon */
+body::after {
+    content: "";
+    position: fixed;
+    top: 30px; left: 40px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffde7, #f5d060 60%, #d4a843);
+    box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12);
+    pointer-events: none; z-index: 0;
+    animation: moonPulse 8s ease-in-out infinite;
+}
+
+@keyframes moonPulse {
+    0%,100% { box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12); }
+    50%      { box-shadow: 0 0 28px 10px rgba(255,230,100,.5), 0 0 75px 25px rgba(255,210,70,.22); }
+}
+
+/* Church silhouette */
+.church-strip {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 110px; pointer-events: none; z-index: 0;
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 0;
+    opacity: .18;
+}
+
+.cs-tower { display: flex; flex-direction: column; align-items: center; width: 42px; }
+.cs-steeple { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 28px solid var(--gold); }
+.cs-cross { width: 10px; height: 14px; position: relative; z-index: 2; margin-bottom: -3px; }
+.cs-cross::before { content: ""; position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 2px; height: 100%; background: var(--gold); }
+.cs-cross::after  { content: ""; position: absolute; left: 0; top: 35%; width: 100%; height: 2px; background: var(--gold); }
+.cs-tower-body { width: 38px; height: 64px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-body { display: flex; flex-direction: column; align-items: center; width: 110px; }
+.cs-roof { width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 36px solid var(--gold); }
+.cs-facade { width: 110px; height: 96px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-ground { position: fixed; bottom: 0; left: 0; right: 0; height: 8px; background: var(--gold); opacity: .1; z-index: 0; pointer-events: none; }
+
+/* ═══════════════════════════════════════
+   DELETE CARD
+═══════════════════════════════════════ */
+.delete-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 460px;
+}
+
+.glass {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 38px 32px;
+    position: relative; overflow: hidden;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+}
+.glass::before { content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg,transparent,rgba(212,168,67,.4),transparent); }
+
+.warn-icon {
+    width: 72px; height: 72px; margin: 0 auto 20px;
+    border-radius: 50%;
+    background: rgba(239,68,68,.12);
+    border: 1.5px solid rgba(239,68,68,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; color: var(--danger);
+}
+
+.delete-title {
+    font-family: 'Amiri', serif; font-size: 1.4rem; font-weight: 700;
+    color: var(--text); margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.delete-title::before { content: "✦"; color: var(--gold); font-size: .85rem; opacity: .7; }
+.delete-title::after { content: "✦"; color: var(--gold); font-size: .85rem; opacity: .7; }
+
+.delete-sub {
+    color: var(--text-muted); font-size: .88rem; margin-bottom: 22px;
+}
+
+.servant-name-box {
+    background: rgba(212,168,67,.08);
+    border: 1px solid rgba(212,168,67,.22);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+
+.servant-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(212,168,67,.15); color: var(--gold);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .95rem; font-weight: 700; flex-shrink: 0;
+    border: 1.5px solid rgba(212,168,67,.25);
+}
+
+.servant-name-box span.name {
+    font-weight: 700; font-size: 1.05rem; color: var(--gold-lt);
+}
+
+.gold-divider { height: 1px; background: linear-gradient(90deg,transparent,var(--gold),transparent); opacity: .2; margin: 4px 0 24px; }
+
+.action-row { display: flex; gap: 12px; }
+
+.btn-confirm-delete {
+    flex: 1;
+    background: linear-gradient(135deg, var(--danger), #f87171);
+    color: #fff; border: none; border-radius: 12px;
+    padding: 12px 20px; font-size: .92rem; font-weight: 700;
+    font-family: 'Cairo', sans-serif; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 4px 18px rgba(239,68,68,.35);
+}
+.btn-confirm-delete:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(239,68,68,.5); color: #fff; }
+
+.btn-cancel {
+    flex: 1;
+    background: var(--card-hover); border: 1px solid var(--card-border);
+    color: var(--text); border-radius: 12px;
+    padding: 12px 20px; font-size: .92rem; font-weight: 600;
+    font-family: 'Cairo', sans-serif; cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .2s, border .2s, color .2s;
+}
+.btn-cancel:hover { background: rgba(212,168,67,.1); border-color: rgba(212,168,67,.3); color: var(--gold); }
+
+footer.mini-footer {
+    text-align: center; margin-top: 22px;
+    color: var(--text-muted); font-size: .78rem;
+    position: relative; z-index: 2;
+}
+footer.mini-footer .footer-cross { display: block; color: var(--gold); opacity: .3; font-size: .85rem; margin-bottom: 5px; letter-spacing: .2em; }
+
+@media (max-width: 480px) {
+    .glass { padding: 30px 22px; }
+    .action-row { flex-direction: column; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Church silhouette -->
+<div class="church-strip">
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+    <div class="cs-body"><div class="cs-roof"></div><div class="cs-facade"></div></div>
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+</div>
+<div class="cs-ground"></div>
+
+<div class="delete-wrap">
+    <div class="glass">
+
+        <div class="warn-icon">
+            <i class="fa fa-triangle-exclamation"></i>
+        </div>
+
+        <h2 class="delete-title">تأكيد الحذف</h2>
+        <p class="delete-sub">هل أنت متأكد أنك تريد حذف هذا الخادم؟ لا يمكن التراجع عن هذا الإجراء.</p>
+
+        <div class="servant-name-box">
+            <span class="servant-avatar">{{ servant.name|first|upper }}</span>
+            <span class="name">{{ servant.name }}</span>
+        </div>
+
+        <div class="gold-divider"></div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="action-row">
+                <a href="{% url 'servant_list' %}" class="btn-cancel">
+                    <i class="fa fa-xmark"></i> إلغاء
+                </a>
+                <button type="submit" class="btn-confirm-delete">
+                    <i class="fa fa-trash"></i> نعم، احذف
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <footer class="mini-footer">
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System
+    </footer>
+</div>
+
+</body>
+</html>

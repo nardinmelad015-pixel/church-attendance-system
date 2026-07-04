@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تم الإرسال</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<div class="alert alert-success">
+
+    <h2>
+        ✅ تم إرسال التنبيهات بنجاح
+    </h2>
+
+    <p>
+        الاجتماع:
+        {{ meeting.name }}
+    </p>
+
+    <p>
+        عدد الخدام الذين تم إرسال التنبيه لهم:
+        {{ sent_count }}
+    </p>
+
+</div>
+
+<a href="/" class="btn btn-primary">
+    العودة للوحة التحكم
+</a>
+
+</body>
+</html>

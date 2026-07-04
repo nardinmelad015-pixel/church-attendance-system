@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ servant.name }}</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --bg:          #020c1e;
+    --bg2:         #0a1628;
+    --sidebar:     #060f20;
+    --card:        #0d1e38;
+    --card-hover:  #112340;
+    --card-border: rgba(212,168,67,.12);
+    --text:        #eef2ff;
+    --text-muted:  #7a92b8;
+    --accent:      #3b82f6;
+    --gold:        #d4a843;
+    --gold-lt:     #f0cd7a;
+    --success:     #22c55e;
+    --danger:      #ef4444;
+    --warning:     #f59e0b;
+    --sb-track:    #060f20;
+    --sb-thumb:    rgba(212,168,67,.25);
+}
+body.light {
+    --bg:          #eef4ff;
+    --bg2:         #e2ecff;
+    --sidebar:     #ffffff;
+    --card:        #ffffff;
+    --card-hover:  #f0f6ff;
+    --card-border: rgba(37,99,235,.12);
+    --text:        #0f172a;
+    --text-muted:  #5a7aaa;
+    --gold:        #b8860b;
+    --gold-lt:     #d4a843;
+    --sb-track:    #e2ecff;
+    --sb-thumb:    rgba(37,99,235,.2);
+}
+*,*::before,*::after{box-sizing:border-box;}
+body {
+    background:var(--bg); color:var(--text);
+    min-height:100vh; font-family:'Cairo',sans-serif;
+    transition:background .4s,color .4s;
+    position:relative; overflow-x:hidden;
+}
+body::before {
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+        radial-gradient(1.5px 1.5px at 5%  4%,  rgba(255,255,255,.8) 0%,transparent 100%),
+        radial-gradient(1px   1px   at 11% 12%, rgba(255,255,230,.6) 0%,transparent 100%),
+        radial-gradient(2px   2px   at 20% 3%,  rgba(255,255,255,.9) 0%,transparent 100%),
+        radial-gradient(1px   1px   at 33% 9%,  rgba(200,230,255,.7) 0%,transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 6%,  rgba(255,255,255,.7) 0%,transparent 100%),
+        radial-gradient(1px   1px   at 60% 14%, rgba(255,240,200,.7) 0%,transparent 100%),
+        radial-gradient(2px   2px   at 73% 5%,  rgba(255,255,255,.85)0%,transparent 100%),
+        radial-gradient(1px   1px   at 85% 10%, rgba(200,220,255,.6) 0%,transparent 100%),
+        radial-gradient(1.5px 1.5px at 93% 3%,  rgba(255,255,255,.75)0%,transparent 100%);
+    animation:starsTwinkle 7s ease-in-out infinite alternate;
+}
+body.light::before{opacity:0;}
+@keyframes starsTwinkle{0%{opacity:.6}100%{opacity:1}}
+body::after {
+    content:""; position:fixed; top:18px; right:280px;
+    width:44px; height:44px; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%,#fffde7,#f5d060 60%,#d4a843);
+    box-shadow:0 0 20px 6px rgba(255,230,100,.3),0 0 55px 18px rgba(255,210,70,.12);
+    pointer-events:none; z-index:0;
+    animation:moonPulse 8s ease-in-out infinite;
+}
+body.light::after{opacity:0;transform:scale(.3);}
+@keyframes moonPulse{0%,100%{box-shadow:0 0 20px 6px rgba(255,230,100,.3),0 0 55px 18px rgba(255,210,70,.12)}50%{box-shadow:0 0 28px 10px rgba(255,230,100,.5),0 0 75px 25px rgba(255,210,70,.22)}}
+
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--sb-track);}
+::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:99px;}
+
+/* Sidebar */
+.sidebar {
+    position:fixed; right:0; top:0;
+    width:260px; height:100vh;
+    background:var(--sidebar);
+    border-left:1px solid var(--card-border);
+    padding:0 0 24px;
+    z-index:100; overflow-y:auto;
+    display:flex; flex-direction:column;
+    transition:background .4s;
+}
+.sidebar::before{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);flex-shrink:0;}
+.sidebar .brand{padding:22px 20px 18px;font-family:'Amiri',serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--gold);border-bottom:1px solid var(--card-border);margin-bottom:8px;}
+.sidebar a{display:flex;align-items:center;gap:11px;color:var(--text);text-decoration:none;padding:10px 20px;margin:2px 12px;border-radius:12px;font-size:.88rem;font-weight:500;transition:background .2s,color .2s,transform .2s;}
+.sidebar a i{width:18px;text-align:center;opacity:.7;}
+.sidebar a:hover{background:rgba(212,168,67,.1);color:var(--gold);transform:translateX(-3px);}
+.sidebar a:hover i,.sidebar a.active i{opacity:1;}
+.sidebar a.active{background:linear-gradient(90deg,rgba(212,168,67,.18),rgba(212,168,67,.06));color:var(--gold);border-right:2px solid var(--gold);}
+.sidebar-section{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin:16px 20px 6px;opacity:.6;}
+.sidebar-cross{margin:auto 0 0;padding:18px 20px 0;text-align:center;opacity:.12;font-size:1.5rem;color:var(--gold);border-top:1px solid var(--card-border);}
+
+/* Top navbar */
+.top-navbar{position:sticky;top:0;z-index:90;margin-right:260px;background:rgba(6,15,32,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--card-border);padding:10px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background .4s,border .4s;}
+body.light .top-navbar{background:rgba(255,255,255,.85);}
+.top-navbar .brand-nav{font-family:'Amiri',serif;font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px;}
+.top-navbar .nav-right{display:flex;align-items:center;gap:10px;}
+.btn-back{background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.25);color:var(--gold);border-radius:10px;padding:7px 16px;font-size:.85rem;font-family:'Cairo',sans-serif;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:background .2s;}
+.btn-back:hover{background:rgba(212,168,67,.2);color:var(--gold);}
+.btn-icon{background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:.85rem;font-family:'Cairo',sans-serif;transition:background .2s,border .2s,color .2s;}
+.btn-icon:hover{background:rgba(212,168,67,.1);border-color:rgba(212,168,67,.3);color:var(--gold);}
+
+/* Main */
+.main{margin-right:260px;padding:28px 30px 80px;min-height:100vh;position:relative;z-index:1;}
+
+/* Glass */
+.glass{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:22px 24px;position:relative;transition:background .35s,border .35s,box-shadow .3s;overflow:hidden;}
+.glass::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.4),transparent);}
+.glass:hover{box-shadow:0 8px 32px rgba(0,0,0,.22);}
+.glass h4{font-size:.95rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;color:var(--text);}
+
+/* Servant hero card */
+.servant-hero {
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:22px;
+    padding:32px 28px;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:24px;
+}
+.servant-hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.servant-hero::after{content:"";position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent 70%);pointer-events:none;}
+
+.servant-avatar-lg {
+    width:80px; height:80px;
+    border-radius:50%;
+    background:linear-gradient(135deg,rgba(212,168,67,.25),rgba(212,168,67,.08));
+    border:2px solid rgba(212,168,67,.35);
+    display:flex; align-items:center; justify-content:center;
+    font-size:2rem; font-weight:900; color:var(--gold);
+    flex-shrink:0;
+}
+
+.servant-name {
+    font-family:'Amiri',serif;
+    font-size:1.7rem;
+    font-weight:700;
+    color:var(--gold);
+    margin:0 0 4px;
+}
+
+.info-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(212,168,67,.08);
+    border:1px solid rgba(212,168,67,.18);
+    border-radius:99px;
+    padding:4px 14px;
+    font-size:.8rem;
+    color:var(--text-muted);
+    margin-left:8px;
+    margin-bottom:6px;
+}
+.info-pill i{color:var(--gold);font-size:.78rem;}
+
+/* Stat cards row */
+.stat-mini {
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:16px;
+    padding:18px 16px;
+    text-align:center;
+    transition:transform .3s,box-shadow .3s;
+    position:relative; overflow:hidden;
+}
+.stat-mini:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.22);}
+.stat-mini .sm-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 10px;}
+.stat-mini h6{color:var(--text-muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700;}
+.stat-mini .sm-num{font-size:2rem;font-weight:900;line-height:1;}
+
+/* Progress ring */
+.rate-circle {
+    width:90px; height:90px;
+    position:relative; flex-shrink:0;
+}
+.rate-circle svg { transform: rotate(-90deg); }
+.rate-circle .rate-bg  { fill:none; stroke:rgba(255,255,255,.07); stroke-width:8; }
+.rate-circle .rate-arc { fill:none; stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .8s ease; }
+.rate-value { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.rate-value .rv-num { font-size:1.1rem; font-weight:900; line-height:1; }
+.rate-value .rv-label { font-size:.58rem; color:var(--text-muted); margin-top:2px; }
+
+/* Table */
+.table{color:var(--text);margin-bottom:0;}
+.table th{color:var(--text-muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;border-color:var(--card-border);font-weight:700;padding:10px 12px;}
+.table td{border-color:var(--card-border);vertical-align:middle;padding:10px 12px;font-size:.88rem;}
+.table tbody tr{transition:background .2s;}
+.table tbody tr:hover{background:rgba(212,168,67,.04);}
+
+/* Badges */
+.badge-present{background:rgba(34,197,94,.14);color:#22c55e;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+.badge-absent {background:rgba(239,68,68,.14); color:#f87171;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+.badge-late   {background:rgba(245,158,11,.14);color:#fbbf24;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+.badge-pending {background:rgba(245,158,11,.14);color:#fbbf24;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+.badge-approved{background:rgba(34,197,94,.14);color:#22c55e;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+.badge-rejected{background:rgba(239,68,68,.14);color:#f87171;border-radius:8px;padding:4px 10px;font-size:.76rem;font-weight:600;}
+
+.gold-divider{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.2;margin:24px 0;}
+
+/* Empty state */
+.empty-inline{text-align:center;padding:36px 20px;color:var(--text-muted);}
+.empty-inline i{font-size:2rem;margin-bottom:10px;display:block;opacity:.25;}
+.empty-inline p{margin:0;font-size:.85rem;}
+
+/* QR button */
+.btn-qr-lg {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(59,130,246,.12);
+    color:var(--accent);
+    border:1px solid rgba(59,130,246,.28);
+    border-radius:12px;
+    padding:10px 22px;
+    font-size:.9rem;
+    font-family:'Cairo',sans-serif;
+    font-weight:600;
+    text-decoration:none;
+    transition:background .2s;
+}
+.btn-qr-lg:hover{background:rgba(59,130,246,.22);color:var(--accent);}
+
+/* Section header */
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.section-hd h4{margin:0;}
+
+/* Breadcrumb */
+.breadcrumb-bar{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-muted);margin-bottom:24px;}
+.breadcrumb-bar a{color:var(--gold);text-decoration:none;}
+.breadcrumb-bar a:hover{text-decoration:underline;}
+
+footer{text-align:center;margin-top:50px;padding-bottom:20px;color:var(--text-muted);font-size:.82rem;}
+.footer-cross{display:block;color:var(--gold);opacity:.35;font-size:.9rem;margin-bottom:6px;letter-spacing:.2em;}
+
+@media(max-width:768px){
+    .sidebar{display:none;}
+    .top-navbar,.main{margin-right:0;}
+    .main{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="brand"><i class="fa fa-church"></i> Church System</div>
+    <div class="sidebar-section">القائمة الرئيسية</div>
+    <a href="/dashboard/"><i class="fa fa-chart-line"></i> Dashboard</a>
+    <a href="/attendance/add/"><i class="fa fa-calendar-plus"></i> تسجيل حضور</a>
+    <a href="/attendance/list/"><i class="fa fa-calendar-check"></i> سجل الحضور</a>
+    <div class="sidebar-section">الإدارة</div>
+    <a href="/excuse/list/"><i class="fa fa-file-circle-xmark"></i> الأعذار</a>
+    <a href="/servants/list/" class="active"><i class="fa fa-users"></i> الخدام</a>
+    <div class="sidebar-cross">✦ ✝ ✦</div>
+</div>
+
+<!-- Top navbar -->
+<div class="top-navbar">
+    <div class="brand-nav">⛪ Church Attendance System</div>
+    <div class="nav-right">
+        <a href="/servants/" class="btn-back"><i class="fa fa-arrow-right"></i> الخدام</a>
+        <button id="themeToggle" class="btn-icon">🌙</button>
+    </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+        <a href="/dashboard/"><i class="fa fa-house"></i> Dashboard</a>
+        <i class="fa fa-chevron-left"></i>
+        <a href="/servants/">الخدام</a>
+        <i class="fa fa-chevron-left"></i>
+        <span>{{ servant.name }}</span>
+    </div>
+
+    <!-- Hero card -->
+    <div class="servant-hero">
+        <div style="display:flex; align-items:center; gap:22px; flex-wrap:wrap;">
+            <!-- Avatar -->
+            <div class="servant-avatar-lg">{{ servant.name|first|upper }}</div>
+
+            <!-- Info -->
+            <div style="flex:1; min-width:200px;">
+                <p class="servant-name">{{ servant.name }}</p>
+                <div style="display:flex; flex-wrap:wrap; gap:0;">
+                    {% if servant.phone %}
+                    <span class="info-pill"><i class="fa fa-phone"></i> {{ servant.phone }}</span>
+                    {% endif %}
+                    {% if servant.email %}
+                    <span class="info-pill"><i class="fa fa-envelope"></i> {{ servant.email }}</span>
+                    {% endif %}
+                    {% if servant.level %}
+                    <span class="info-pill"><i class="fa fa-layer-group"></i> {{ servant.level }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Rate circle -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                <div class="rate-circle">
+                    <svg viewBox="0 0 90 90" width="90" height="90">
+                        <circle class="rate-bg"  cx="45" cy="45" r="36"/>
+                        <circle class="rate-arc" cx="45" cy="45" r="36"
+                            stroke="{% if attendance_rate >= 80 %}#22c55e{% elif attendance_rate >= 50 %}#f59e0b{% else %}#ef4444{% endif %}"
+                            stroke-dasharray="{{ attendance_rate|floatformat:0 }} 100"
+                            stroke-dashoffset="0"
+                            style="stroke-dasharray: calc({{ attendance_rate }} * 2.262) 226.2;"/>
+                    </svg>
+                    <div class="rate-value">
+                        <span class="rv-num" style="color:{% if attendance_rate >= 80 %}#22c55e{% elif attendance_rate >= 50 %}#f59e0b{% else %}#ef4444{% endif %};">{{ attendance_rate }}%</span>
+                        <span class="rv-label">الحضور</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat mini cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-mini">
+                <div class="sm-icon" style="background:rgba(34,197,94,.12);">
+                    <i class="fa fa-circle-check" style="color:#22c55e;"></i>
+                </div>
+                <h6>الحضور</h6>
+                <div class="sm-num" style="color:#22c55e;">{{ present_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-mini">
+                <div class="sm-icon" style="background:rgba(239,68,68,.12);">
+                    <i class="fa fa-circle-xmark" style="color:#ef4444;"></i>
+                </div>
+                <h6>الغياب</h6>
+                <div class="sm-num" style="color:#ef4444;">{{ absent_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-mini">
+                <div class="sm-icon" style="background:rgba(245,158,11,.12);">
+                    <i class="fa fa-clock" style="color:#f59e0b;"></i>
+                </div>
+                <h6>التأخير</h6>
+                <div class="sm-num" style="color:#f59e0b;">{{ late_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-mini">
+                <div class="sm-icon" style="background:rgba(212,168,67,.12);">
+                    <i class="fa fa-list-check" style="color:var(--gold);"></i>
+                </div>
+                <h6>إجمالي الاجتماعات</h6>
+                <div class="sm-num" style="color:var(--gold);">{{ attendances|length }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="glass mb-4">
+        <h4><i class="fa fa-chart-pie" style="color:var(--gold);"></i> توزيع الحضور</h4>
+        <canvas id="servantChart" style="max-height:200px;"></canvas>
+    </div>
+
+    <div class="gold-divider"></div>
+
+    <!-- Attendance table -->
+    <div class="glass mb-4">
+        <div class="section-hd">
+            <h4><i class="fa fa-clipboard-list" style="color:var(--gold);"></i> سجل الحضور</h4>
+            <span style="font-size:.8rem; color:var(--text-muted);">{{ attendances|length }} اجتماع</span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاجتماع</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendance in attendances %}
+                    <tr>
+                        <td style="color:var(--text-muted);">{{ forloop.counter }}</td>
+                        <td>{{ attendance.meeting }}</td>
+                        <td>
+                            {% if attendance.status == "present" %}<span class="badge-present">حاضر</span>
+                            {% elif attendance.status == "absent" %}<span class="badge-absent">غائب</span>
+                            {% elif attendance.status == "late" %}<span class="badge-late">متأخر</span>
+                            {% else %}<span style="color:var(--text-muted);">{{ attendance.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3"><div class="empty-inline"><i class="fa fa-calendar-xmark"></i><p>لا يوجد سجل حضور</p></div></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="gold-divider"></div>
+
+    <!-- Excuses table -->
+    <div class="glass mb-4">
+        <div class="section-hd">
+            <h4><i class="fa fa-file-circle-xmark" style="color:#f59e0b;"></i> الاعتذارات</h4>
+            <span style="font-size:.8rem; color:var(--text-muted);">{{ excuses|length }} عذر</span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاجتماع</th>
+                        <th>السبب</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for excuse in excuses %}
+                    <tr>
+                        <td style="color:var(--text-muted);">{{ forloop.counter }}</td>
+                        <td>{{ excuse.meeting }}</td>
+                        <td style="max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-muted);" title="{{ excuse.reason }}">{{ excuse.reason }}</td>
+                        <td>
+                            {% if excuse.status == "pending" %}<span class="badge-pending">قيد المراجعة</span>
+                            {% elif excuse.status == "approved" %}<span class="badge-approved">مقبول</span>
+                            {% elif excuse.status == "rejected" %}<span class="badge-rejected">مرفوض</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4"><div class="empty-inline"><i class="fa fa-folder-open"></i><p>لا توجد اعتذارات</p></div></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- QR Button -->
+    <div class="glass mb-4" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+            <h4 style="margin:0;"><i class="fa fa-qrcode" style="color:var(--gold);"></i> QR Code الخادم</h4>
+            <p style="margin:4px 0 0; font-size:.83rem; color:var(--text-muted);">اطبع أو شارك QR Code الخاص بهذا الخادم</p>
+        </div>
+        <a href="/servant/{{ servant.id }}/qr/" target="_blank" class="btn-qr-lg">
+            <i class="fa fa-qrcode"></i> عرض QR Code
+        </a>
+    </div>
+
+    <footer>
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System<br>
+        <span style="font-size:.78rem;">Developed by Nardin Melad</span>
+    </footer>
+
+</div>
+
+<script>
+// Chart
+const ctx = document.getElementById('servantChart');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['حاضر', 'غائب', 'متأخر'],
+        datasets: [{
+            data: [{{ present_count }}, {{ absent_count }}, {{ late_count }}],
+            backgroundColor: ['#22c55e', '#ef4444', '#f59e0b'],
+            borderColor: 'transparent', borderWidth: 0, hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive: true, cutout: '65%',
+        plugins: { legend: { position: 'bottom', labels: { color: '#7a92b8', padding: 16, font: { size: 13, family: 'Cairo' } } } }
+    }
+});
+</script>
+<script>
+const toggle = document.getElementById("themeToggle");
+if (localStorage.getItem("theme") === "light") { document.body.classList.add("light"); toggle.innerText = "☀️"; }
+toggle.onclick = () => {
+    document.body.classList.toggle("light");
+    const isLight = document.body.classList.contains("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    toggle.innerText = isLight ? "☀️" : "🌙";
+};
+</script>
+</body>
+</html>

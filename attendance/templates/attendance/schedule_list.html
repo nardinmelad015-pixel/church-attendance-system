@@ -1,0 +1,30 @@
+<h1>جدول التحضير</h1>
+
+<table border="1">
+
+    <tr>
+    <th>الخادم</th>
+    <th>الاجتماع</th>
+    <th>المهمة</th>
+    <th>ملاحظات</th>
+    <th>الحالة</th>
+</tr>
+
+{% for schedule in schedules %}
+<tr>
+    <td>{{ schedule.servant }}</td>
+    <td>{{ schedule.meeting }}</td>
+    <td>{{ schedule.task }}</td>
+    <td>{{ schedule.notes }}</td>
+    <td>
+        {% if schedule.status == "done" %}
+            ✅ تم التنفيذ
+        {% else %}
+            ⏳ قيد التنفيذ
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+
+
+</table>

@@ -1,0 +1,1114 @@
+
+
+Dashboard final · HTML
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+ 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Church Dashboard</title>
+ 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+<style>
+ 
+/* ═══════════════════════════════════════
+   ROOT TOKENS
+═══════════════════════════════════════ */
+:root {
+    --bg:          #020c1e;
+    --bg2:         #0a1628;
+    --sidebar:     #060f20;
+    --card:        #0d1e38;
+    --card-hover:  #112340;
+    --card-border: rgba(212,168,67,.12);
+    --text:        #eef2ff;
+    --text-muted:  #7a92b8;
+    --accent:      #3b82f6;
+    --gold:        #d4a843;
+    --gold-lt:     #f0cd7a;
+    --success:     #22c55e;
+    --danger:      #ef4444;
+    --warning:     #f59e0b;
+    --sb-track:    #060f20;
+    --sb-thumb:    rgba(212,168,67,.25);
+}
+ 
+body.light {
+    --bg:          #eef4ff;
+    --bg2:         #e2ecff;
+    --sidebar:     #ffffff;
+    --card:        #ffffff;
+    --card-hover:  #f0f6ff;
+    --card-border: rgba(37,99,235,.12);
+    --text:        #0f172a;
+    --text-muted:  #5a7aaa;
+    --gold:        #b8860b;
+    --gold-lt:     #d4a843;
+    --sb-track:    #e2ecff;
+    --sb-thumb:    rgba(37,99,235,.2);
+}
+ 
+/* ═══════════════════════════════════════
+   BASE
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+ 
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Cairo', sans-serif;
+    transition: background .4s, color .4s;
+    position: relative;
+    overflow-x: hidden;
+}
+ 
+/* Stars */
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background:
+        radial-gradient(1.5px 1.5px at 5%  4%,  rgba(255,255,255,.8) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 11% 12%, rgba(255,255,230,.6) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 20% 3%,  rgba(255,255,255,.9) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 33% 9%,  rgba(200,230,255,.7) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 48% 6%,  rgba(255,255,255,.7) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 60% 14%, rgba(255,240,200,.7) 0%, transparent 100%),
+        radial-gradient(2px   2px   at 73% 5%,  rgba(255,255,255,.85) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 85% 10%, rgba(200,220,255,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 93% 3%,  rgba(255,255,255,.75) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 15% 20%, rgba(255,255,255,.5) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 40% 18%, rgba(255,240,180,.6) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 68% 22%, rgba(255,255,255,.65) 0%, transparent 100%),
+        radial-gradient(1px   1px   at 90% 17%, rgba(200,230,255,.55) 0%, transparent 100%);
+    animation: starsTwinkle 7s ease-in-out infinite alternate;
+}
+body.light::before { opacity: 0; }
+@keyframes starsTwinkle { 0% { opacity: .6; } 100% { opacity: 1; } }
+ 
+/* Moon */
+body::after {
+    content: "";
+    position: fixed; top: 18px; right: 280px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffde7, #f5d060 60%, #d4a843);
+    box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12);
+    pointer-events: none; z-index: 0;
+    animation: moonPulse 8s ease-in-out infinite;
+}
+body.light::after { opacity: 0; transform: scale(.3); }
+@keyframes moonPulse {
+    0%,100% { box-shadow: 0 0 20px 6px rgba(255,230,100,.3), 0 0 55px 18px rgba(255,210,70,.12); }
+    50%      { box-shadow: 0 0 28px 10px rgba(255,230,100,.5), 0 0 75px 25px rgba(255,210,70,.22); }
+}
+ 
+/* Church silhouette */
+.church-strip {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 110px; pointer-events: none; z-index: 0;
+    display: flex; align-items: flex-end; justify-content: flex-start;
+    padding-right: 260px; opacity: .18; transition: opacity .4s;
+}
+body.light .church-strip { opacity: .07; }
+.cs-tower { display: flex; flex-direction: column; align-items: center; width: 42px; }
+.cs-steeple { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 28px solid var(--gold); }
+.cs-cross { width: 10px; height: 14px; position: relative; z-index: 2; margin-bottom: -3px; }
+.cs-cross::before { content: ""; position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 2px; height: 100%; background: var(--gold); }
+.cs-cross::after  { content: ""; position: absolute; left: 0; top: 35%; width: 100%; height: 2px; background: var(--gold); }
+.cs-tower-body { width: 38px; height: 64px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-body { display: flex; flex-direction: column; align-items: center; width: 110px; }
+.cs-roof { width: 0; height: 0; border-left: 60px solid transparent; border-right: 60px solid transparent; border-bottom: 36px solid var(--gold); }
+.cs-facade { width: 110px; height: 96px; background: var(--gold); border-radius: 2px 2px 0 0; }
+.cs-ground { position: fixed; bottom: 0; left: 0; right: 0; height: 8px; background: var(--gold); opacity: .1; z-index: 0; pointer-events: none; }
+ 
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--sb-track); }
+::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 99px; }
+ 
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar {
+    position: fixed; right: 0; top: 0;
+    width: 260px; height: 100vh;
+    background: var(--sidebar); border-left: 1px solid var(--card-border);
+    padding: 0 0 24px; z-index: 100; overflow-y: auto;
+    display: flex; flex-direction: column; transition: background .4s;
+}
+.sidebar::before { content: ""; display: block; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); flex-shrink: 0; }
+.sidebar .brand { padding: 22px 20px 18px; font-family: 'Amiri', serif; font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--gold); border-bottom: 1px solid var(--card-border); margin-bottom: 8px; }
+.sidebar a { display: flex; align-items: center; gap: 11px; color: var(--text); text-decoration: none; padding: 10px 20px; margin: 2px 12px; border-radius: 12px; font-size: .88rem; font-weight: 500; transition: background .2s, color .2s, transform .2s; position: relative; }
+.sidebar a i { width: 18px; text-align: center; opacity: .7; }
+.sidebar a:hover { background: rgba(212,168,67,.1); color: var(--gold); transform: translateX(-3px); }
+.sidebar a:hover i { opacity: 1; }
+.sidebar a.active { background: linear-gradient(90deg, rgba(212,168,67,.18), rgba(212,168,67,.06)); color: var(--gold); border-right: 2px solid var(--gold); }
+.sidebar a.active i { opacity: 1; }
+.sidebar .sidebar-section { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); margin: 16px 20px 6px; opacity: .6; }
+.sidebar-cross { margin: auto 0 0; padding: 18px 20px 0; text-align: center; opacity: .12; font-size: 1.5rem; color: var(--gold); border-top: 1px solid var(--card-border); padding-top: 14px; }
+ 
+/* ═══════════════════════════════════════
+   TOP NAVBAR
+═══════════════════════════════════════ */
+.top-navbar {
+    position: sticky; top: 0; z-index: 90; margin-right: 260px;
+    background: rgba(6,15,32,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    transition: background .4s, border .4s;
+}
+body.light .top-navbar { background: rgba(255,255,255,.85); }
+.top-navbar .brand-nav { font-family: 'Amiri', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 8px; }
+.top-navbar .nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-logo { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--card-border); object-fit: contain; background: rgba(212,168,67,.07); }
+.btn-bell { position: relative; background: var(--card); border: 1px solid var(--card-border); color: var(--text); border-radius: 10px; width: 40px; height: 40px; cursor: pointer; font-size: .95rem; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.btn-bell:hover { background: rgba(212,168,67,.12); border-color: rgba(212,168,67,.3); }
+.badge-bell { position: absolute; top: -5px; left: -5px; background: var(--danger); border-radius: 99px; font-size: .62rem; padding: 1px 5px; color: #fff; font-weight: 700; line-height: 1.4; }
+.nav-user { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 6px 14px; font-size: .85rem; font-weight: 600; }
+.logout-form { display: inline; }
+.btn-logout { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); color: #f87171; border-radius: 10px; padding: 6px 14px; font-size: .82rem; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif; transition: background .2s; }
+.btn-logout:hover { background: rgba(239,68,68,.22); }
+ 
+/* ═══════════════════════════════════════
+   MAIN
+═══════════════════════════════════════ */
+.main { margin-right: 260px; padding: 28px 30px 80px; min-height: 100vh; position: relative; z-index: 1; }
+ 
+/* ═══════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════ */
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+.topbar h2 { margin: 0; font-family: 'Amiri', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.topbar h2::before { content: "✦"; color: var(--gold); font-size: .9rem; opacity: .7; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+.search-box { width: 240px; background: var(--card); border: 1px solid var(--card-border); color: var(--text); border-radius: 12px; padding: 9px 16px; font-size: .88rem; outline: none; font-family: 'Cairo', sans-serif; transition: border .25s, box-shadow .25s; }
+.search-box::placeholder { color: var(--text-muted); }
+.search-box:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.18); }
+.btn-icon { background: var(--card); border: 1px solid var(--card-border); color: var(--text); border-radius: 10px; padding: 8px 14px; cursor: pointer; font-size: .85rem; font-family: 'Cairo', sans-serif; transition: background .2s, border .2s, color .2s; }
+.btn-icon:hover { background: rgba(212,168,67,.1); border-color: rgba(212,168,67,.3); color: var(--gold); }
+.tab-btn-active { background: rgba(212,168,67,.15) !important; color: var(--gold) !important; border-color: rgba(212,168,67,.3) !important; }
+ 
+/* ═══════════════════════════════════════
+   GLASS
+═══════════════════════════════════════ */
+.glass { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 22px 24px; position: relative; transition: background .35s, border .35s, box-shadow .3s; overflow: hidden; }
+.glass::before { content: ""; position: absolute; top: 0; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg, transparent, rgba(212,168,67,.4), transparent); }
+.glass:hover { box-shadow: 0 8px 32px rgba(0,0,0,.22); }
+.glass h4 { font-size: .95rem; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; color: var(--text); }
+ 
+/* ═══════════════════════════════════════
+   STAT CARDS
+═══════════════════════════════════════ */
+.stat-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; padding: 22px 18px; text-align: center; transition: transform .3s, box-shadow .3s, background .3s; position: relative; overflow: hidden; }
+.stat-card::after { content: ""; position: absolute; top: -40%; left: -40%; width: 60%; height: 180%; background: linear-gradient(135deg, rgba(255,255,255,.03), rgba(255,255,255,.07), rgba(255,255,255,.03)); transform: rotate(20deg); pointer-events: none; }
+.stat-card:hover { transform: translateY(-6px); box-shadow: 0 14px 36px rgba(0,0,0,.25); background: var(--card-hover); }
+.stat-card .icon { font-size: 1.5rem; width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.icon-blue  { background: rgba(59,130,246,.12);  }
+.icon-green { background: rgba(34,197,94,.12);   }
+.icon-red   { background: rgba(239,68,68,.12);   }
+.icon-amber { background: rgba(245,158,11,.12);  }
+.stat-card h6 { color: var(--text-muted); font-size: .75rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.stat-number { font-size: 2.4rem; font-weight: 900; line-height: 1; font-family: 'Cairo', sans-serif; }
+ 
+/* ═══════════════════════════════════════
+   TABLE
+═══════════════════════════════════════ */
+.table { color: var(--text); margin-bottom: 0; }
+.table th { color: var(--text-muted); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; border-color: var(--card-border); font-weight: 700; padding: 10px 12px; background: transparent; }
+.table td { border-color: var(--card-border); vertical-align: middle; padding: 10px 12px; font-size: .88rem; }
+.table tbody tr { transition: background .2s; }
+.table tbody tr:hover { background: rgba(212,168,67,.04); }
+ 
+/* ═══════════════════════════════════════
+   BADGES
+═══════════════════════════════════════ */
+.badge-present  { background: rgba(34,197,94,.14);  color: #22c55e; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-absent   { background: rgba(239,68,68,.14);  color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-late     { background: rgba(245,158,11,.14); color: #fbbf24; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-pending  { background: rgba(245,158,11,.14); color: #fbbf24; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-approved { background: rgba(34,197,94,.14);  color: #22c55e; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+.badge-rejected { background: rgba(239,68,68,.14);  color: #f87171; border-radius: 8px; padding: 4px 10px; font-size: .76rem; font-weight: 600; }
+ 
+/* ═══════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════ */
+.progress { background: rgba(255,255,255,.07); border-radius: 99px; height: 8px; }
+.progress-bar { border-radius: 99px; }
+ 
+/* ═══════════════════════════════════════
+   MEDALS
+═══════════════════════════════════════ */
+.medal-1 { color: #ffd700; }
+.medal-2 { color: #c0c0c0; }
+.medal-3 { color: #cd7f32; }
+ 
+/* ═══════════════════════════════════════
+   MEETING SELECTOR
+═══════════════════════════════════════ */
+.form-select-custom { background: var(--bg2); border: 1px solid var(--card-border); color: var(--text); border-radius: 12px; padding: 9px 16px; font-size: .88rem; outline: none; cursor: pointer; font-family: 'Cairo', sans-serif; transition: border .2s, box-shadow .2s; }
+.form-select-custom:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,.2); }
+ 
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn-notify { background: rgba(34,197,94,.1); color: #22c55e; border: 1px solid rgba(34,197,94,.22); border-radius: 10px; padding: 8px 16px; font-size: .83rem; font-family: 'Cairo', sans-serif; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; font-weight: 600; }
+.btn-notify:hover { background: rgba(34,197,94,.2); color: #22c55e; }
+.btn-approve { background: rgba(34,197,94,.1); color: #22c55e; border: 1px solid rgba(34,197,94,.22); border-radius: 8px; padding: 4px 12px; font-size: .78rem; font-family: 'Cairo', sans-serif; text-decoration: none; font-weight: 600; transition: background .2s; display: inline-block; }
+.btn-approve:hover { background: rgba(34,197,94,.2); color: #22c55e; }
+.btn-reject { background: rgba(239,68,68,.08); color: #f87171; border: 1px solid rgba(239,68,68,.22); border-radius: 8px; padding: 4px 12px; font-size: .78rem; font-family: 'Cairo', sans-serif; text-decoration: none; font-weight: 600; transition: background .2s; display: inline-block; }
+.btn-reject:hover { background: rgba(239,68,68,.18); color: #f87171; }
+ 
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+.toast-container { z-index: 9999; }
+.toast { background: var(--card); border: 1px solid var(--card-border); color: var(--text); border-radius: 14px; min-width: 240px; font-family: 'Cairo', sans-serif; }
+.toast-header { background: transparent; color: var(--text); border-bottom: 1px solid var(--card-border); }
+ 
+/* ═══════════════════════════════════════
+   SERVANT LINK
+═══════════════════════════════════════ */
+.servant-link { color: var(--gold); text-decoration: none; font-weight: 600; transition: color .2s; }
+.servant-link:hover { color: var(--gold-lt); text-decoration: underline; }
+ 
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer { text-align: center; margin-top: 50px; padding-bottom: 20px; color: var(--text-muted); font-size: .82rem; }
+footer .footer-cross { display: block; color: var(--gold); opacity: .35; font-size: .9rem; margin-bottom: 6px; letter-spacing: .2em; }
+ 
+/* ═══════════════════════════════════════
+   PAGE SECTIONS
+═══════════════════════════════════════ */
+.page-section { display: none; }
+.page-section.active { display: block; }
+ 
+/* ═══════════════════════════════════════
+   REPORT FILTERS
+═══════════════════════════════════════ */
+.filter-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 160px; }
+.filter-group label { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.filter-group select, .filter-group input[type="date"] { background: var(--bg2); border: 1px solid var(--card-border); color: var(--text); border-radius: 10px; padding: 9px 13px; font-size: .86rem; outline: none; font-family: 'Cairo', sans-serif; transition: border .2s; }
+.filter-group select:focus, .filter-group input[type="date"]:focus { border-color: var(--gold); }
+ 
+/* Export buttons */
+.btn-export { display: inline-flex; align-items: center; gap: 7px; border-radius: 10px; padding: 9px 18px; font-size: .86rem; cursor: pointer; border: none; font-weight: 600; font-family: 'Cairo', sans-serif; transition: opacity .2s, transform .15s; }
+.btn-export:active { transform: scale(.97); }
+.btn-export-pdf   { background: rgba(239,68,68,.13); color: #f87171; border: 1px solid rgba(239,68,68,.28); }
+.btn-export-excel { background: rgba(34,197,94,.1);  color: #22c55e; border: 1px solid rgba(34,197,94,.28); }
+ 
+/* Summary strip */
+.summary-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.summary-item { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px 16px; text-align: center; }
+.summary-item .s-label { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; font-weight: 700; }
+.summary-item .s-value { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+ 
+/* Meetings pills */
+.meetings-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.meeting-pill { background: var(--card); border: 1px solid var(--card-border); border-radius: 99px; padding: 5px 16px; font-size: .82rem; display: flex; align-items: center; gap: 7px; cursor: pointer; transition: border .2s, background .2s, color .2s; font-weight: 600; }
+.meeting-pill:hover, .meeting-pill.active { border-color: var(--gold); background: rgba(212,168,67,.12); color: var(--gold); }
+.pill-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+ 
+/* Gold divider */
+.gold-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .25; margin: 28px 0; }
+ 
+/* ═══════════════════════════════════════
+   SCHEDULE TABLE
+═══════════════════════════════════════ */
+.schedule-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+.schedule-header h4 { margin: 0; font-size: .95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.schedule-filter { background: var(--bg2); border: 1px solid var(--card-border); color: var(--text); border-radius: 10px; padding: 7px 14px; font-size: .83rem; outline: none; cursor: pointer; font-family: 'Cairo', sans-serif; transition: border .2s; appearance: none; -webkit-appearance: none; }
+.schedule-filter:focus { border-color: var(--gold); }
+.sch-avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(212,168,67,.15); color: var(--gold); display: inline-flex; align-items: center; justify-content: center; font-size: .78rem; font-weight: 700; flex-shrink: 0; margin-left: 8px; }
+.task-pill { background: rgba(212,168,67,.1); color: var(--gold); border: 1px solid rgba(212,168,67,.2); border-radius: 20px; padding: 3px 12px; font-size: .76rem; display: inline-block; white-space: nowrap; font-weight: 600; }
+.status-done { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,.1); color: #22c55e; border: 1px solid rgba(34,197,94,.22); border-radius: 20px; padding: 4px 12px; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+.status-pending { display: inline-flex; align-items: center; gap: 5px; background: rgba(245,158,11,.1); color: #fbbf24; border: 1px solid rgba(245,158,11,.22); border-radius: 20px; padding: 4px 12px; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+.sch-note { max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-muted); font-size: .83rem; cursor: default; }
+.sch-empty { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+.sch-empty i { font-size: 2.2rem; margin-bottom: 12px; display: block; opacity: .25; }
+.sch-empty p { margin: 0; font-size: .88rem; }
+ 
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 768px) {
+    .sidebar  { display: none; }
+    .top-navbar { margin-right: 0; }
+    .main { margin-right: 0; padding: 16px; }
+    .church-strip { padding-right: 0; }
+    .sch-note { max-width: 100px; }
+    .stat-number { font-size: 1.8rem; }
+}
+ 
+</style>
+</head>
+ 
+<body>
+ 
+<!-- Church silhouette -->
+<div class="church-strip">
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+    <div class="cs-body"><div class="cs-roof"></div><div class="cs-facade"></div></div>
+    <div class="cs-tower"><div class="cs-cross"></div><div class="cs-steeple"></div><div class="cs-tower-body"></div></div>
+</div>
+<div class="cs-ground"></div>
+ 
+<!-- ════════════════════ SIDEBAR ════════════════════ -->
+{% load static %}
+<div class="sidebar">
+    <div class="brand"><i class="fa fa-church"></i> Church System</div>
+ 
+    <div class="sidebar-section">القائمة الرئيسية</div>
+    <a href="/dashboard/" class="active"><i class="fa fa-chart-line"></i> Dashboard</a>
+    <a href="/attendance/add/"><i class="fa fa-calendar-plus"></i> تسجيل حضور</a>
+    <a href="/attendance/list/"><i class="fa fa-calendar-check"></i> سجل الحضور</a>
+    <a href="/schedule/add/"><i class="fa fa-calendar-check"></i> جدول التحضير</a>
+    
+    
+ 
+    <div class="sidebar-section">الإدارة</div>
+    <a href="/excuse/list/"><i class="fa fa-file-circle-xmark"></i> الأعذار</a>
+    <a href="/servants/"><i class="fa fa-users"></i> الخدام</a>
+    <a href="/meetings/"><i class="fa fa-calendar-days"></i>الاجتماعات</a>
+    <a href="#" onclick="showPage('reports'); return false;" id="nav-reports">
+        <i class="fa fa-file-chart-column"></i> التقارير
+    </a>
+ 
+    <div class="sidebar-cross">✦ ✝ ✦</div>
+</div>
+ 
+<!-- ════════════════════ TOP NAVBAR ════════════════════ -->
+<div class="top-navbar">
+    <div class="brand-nav">
+        <img src="{% static 'images/logo.png' %}" class="nav-logo" alt="logo">
+        ⛪ Church Attendance System
+    </div>
+    <div class="nav-right">
+        <div class="nav-user">👤 {{ request.user.username }}</div>
+        <form action="/logout/" method="post" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout"><i class="fa fa-right-from-bracket"></i> خروج</button>
+        </form>
+    </div>
+</div>
+ 
+<!-- ════════════════════ MAIN ════════════════════ -->
+<div class="main">
+ 
+    <!-- Toast -->
+    {% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        {% for message in messages %}
+        <div class="toast show" role="alert">
+            <div class="toast-header">
+                <i class="fa fa-bell me-2" style="color:var(--gold);"></i>
+                <strong class="me-auto">تنبيه</strong>
+                <button type="button" class="btn-close btn-close-white" onclick="this.closest('.toast').remove()"></button>
+            </div>
+            <div class="toast-body">{{ message }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+ 
+    <!-- Topbar -->
+    <div class="topbar">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <h2 id="page-title">لوحة التحكم</h2>
+            <div style="display:flex; gap:6px; margin-right:14px;">
+                <button onclick="showPage('dashboard')" id="tab-dashboard"
+                    class="btn-icon tab-btn-active" style="font-size:.82rem; padding:6px 14px;">
+                    <i class="fa fa-chart-line"></i> Dashboard
+                </button>
+                <button onclick="showPage('reports')" id="tab-reports"
+                    class="btn-icon" style="font-size:.82rem; padding:6px 14px;">
+                    <i class="fa fa-file-chart-column"></i> التقارير
+                </button>
+            </div>
+        </div>
+        <div class="topbar-actions">
+            <button id="themeToggle" class="btn-icon" title="تغيير المظهر">🌙</button>
+        </div>
+    </div>
+ 
+    <!-- ══════════════ PAGE: DASHBOARD ══════════════ -->
+    <div id="page-dashboard" class="page-section active">
+ 
+    <!-- Meeting selector — بدون زر QR -->
+    <div class="glass mb-4">
+        <form method="GET" style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <label style="color:var(--text-muted); font-size:.88rem; margin:0; font-weight:600;">
+                <i class="fa fa-calendar-days me-2" style="color:var(--gold);"></i>اختر اجتماع
+            </label>
+            {% if selected_meeting %}
+            <a href="/meeting/{{ selected_meeting }}/qr/" target="_blank" class="btn-qr">
+                <i class="fa fa-qrcode"></i> عرض QR
+            </a>
+            {% endif %}
+            <select name="meeting" class="form-select-custom" onchange="this.form.submit()" style="flex:1; min-width:200px;">
+                <option value="">كل الاجتماعات</option>
+                {% for meeting in meetings %}
+                <option value="{{ meeting.id }}" {% if selected_meeting == meeting.id|stringformat:"s" %}selected{% endif %}>
+                    {{ meeting.title }}
+                </option>
+                {% endfor %}
+            </select>
+ 
+            {% if selected_meeting %}
+            {% for meeting in meetings %}
+            {% if meeting.id|stringformat:"s" == selected_meeting %}
+            <a href="{% url 'send_notifications' meeting.id %}" class="btn-notify">
+                <i class="fa fa-envelope"></i> إرسال تنبيهات
+            </a>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+ 
+    <!-- Stat cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="icon icon-blue"><i class="fa fa-users" style="color:var(--accent);"></i></div>
+                <h6>إجمالي الخدام</h6>
+                <div class="stat-number counter" style="color:var(--accent);">{{ total_servants }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="icon icon-green"><i class="fa fa-circle-check" style="color:#22c55e;"></i></div>
+                <h6>الحضور</h6>
+                <div class="stat-number counter" style="color:#22c55e;">{{ present_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="icon icon-red"><i class="fa fa-circle-xmark" style="color:#ef4444;"></i></div>
+                <h6>الغياب</h6>
+                <div class="stat-number counter" style="color:#ef4444;">{{ absent_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="icon icon-amber"><i class="fa fa-clock" style="color:#f59e0b;"></i></div>
+                <h6>التأخير</h6>
+                <div class="stat-number counter" style="color:#f59e0b;">{{ late_count }}</div>
+            </div>
+        </div>
+    </div>
+ 
+    <!-- Chart + Leaderboard -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="glass h-100">
+                <h4><i class="fa fa-chart-pie" style="color:var(--gold);"></i> إحصائيات الحضور</h4>
+                <canvas id="attendanceChart" style="max-height:260px;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="glass h-100">
+                <h4><i class="fa fa-trophy" style="color:#fbbf24;"></i> أفضل الخدام</h4>
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr><th>#</th><th>الخادم</th><th>نسبة الحضور</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for servant in leaders %}
+                        <tr>
+                            <td>
+                                {% if forloop.counter == 1 %}<span class="medal-1"><i class="fa fa-medal"></i></span>
+                                {% elif forloop.counter == 2 %}<span class="medal-2"><i class="fa fa-medal"></i></span>
+                                {% else %}<span class="medal-3"><i class="fa fa-medal"></i></span>{% endif %}
+                            </td>
+                            <td>
+                                <a href="/servant/{{ servant.id }}/" class="servant-link">{{ servant.name }}</a>
+                            </td>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="progress" style="flex:1;">
+                                        <div class="progress-bar" style="width:{{ servant.attendance_rate }}%; background:var(--gold);"></div>
+                                    </div>
+                                    <span style="font-size:.78rem; min-width:36px; color:var(--text-muted);">{{ servant.attendance_rate }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="gold-divider"></div>
+ 
+    <!-- ════ جدول التحضير ════ -->
+    <div class="glass mb-4">
+        <div class="schedule-header">
+            <h4>
+                <i class="fa fa-list-check" style="color:var(--gold);"></i>
+                جدول التحضير
+                <span style="font-size:.78rem; color:var(--text-muted); font-weight:400; margin-right:4px;">— مهام الخدام</span>
+            </h4>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <select id="scheduleFilter" class="schedule-filter">
+                    <option value="all">كل الحالات</option>
+                    <option value="done">✅ تم التنفيذ</option>
+                    <option value="pending">⏳ قيد التنفيذ</option>
+                </select>
+                <span id="scheduleCount" style="font-size:.8rem; color:var(--text-muted);"></span>
+            </div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0" id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th>#</th><th>الخادم</th><th>الاجتماع</th>
+                        <th>المهمة</th><th>ملاحظات</th><th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                    {% for schedule in schedules %}
+                    <tr class="schedule-row" data-status="{{ schedule.status }}">
+                        <td style="color:var(--text-muted); font-size:.83rem;">{{ forloop.counter }}</td>
+                        <td>
+                            <div style="display:flex; align-items:center;">
+                                <span class="sch-avatar">{{ schedule.servant.name|first|upper }}</span>
+                                <a href="/servant/{{ schedule.servant.id }}/" class="servant-link">{{ schedule.servant.name }}</a>
+                            </div>
+                        </td>
+                        <td style="font-size:.86rem; color:var(--text-muted);">{{ schedule.meeting }}</td>
+                        <td>
+                            <span class="task-pill">
+                                <i class="fa fa-tag" style="font-size:.68rem;"></i> {{ schedule.task }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="sch-note" title="{{ schedule.notes }}">
+                                {% if schedule.notes %}{{ schedule.notes }}{% else %}—{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if schedule.status == "done" %}
+                                <span class="status-done"><i class="fa fa-circle-check"></i> تم التنفيذ</span>
+                            {% else %}
+                                <span class="status-pending"><i class="fa fa-hourglass-half"></i> قيد التنفيذ</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="sch-empty">
+                                <i class="fa fa-clipboard-list"></i>
+                                <p>لا توجد مهام مضافة لجدول التحضير</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <div class="gold-divider"></div>
+ 
+    <!-- إحصائيات الخدام -->
+    <div class="glass mb-4">
+        <h4>
+            <i class="fa fa-table-list" style="color:var(--gold);"></i>
+            إحصائيات الخدام
+            <span style="font-size:.76rem; color:var(--text-muted); font-weight:400; margin-right:auto;">عدد العناصر: {{ servants_data|length }}</span>
+        </h4>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>الخادم</th><th>الحضور</th><th>الغياب</th>
+                        <th>التأخير</th><th>المستوى</th><th>نسبة الحضور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for servant in servants_data %}
+                    <tr class="servant-row">
+                        <td>
+                            <a href="/servant/{{ servant.id }}/" class="servant-link">{{ servant.name }}</a>
+                        </td>
+                        <td style="color:#22c55e; font-weight:600;">{{ servant.present }}</td>
+                        <td style="color:#ef4444; font-weight:600;">{{ servant.absent }}</td>
+                        <td style="color:#f59e0b; font-weight:600;">{{ servant.late }}</td>
+                        <td>
+                            <span style="background:rgba(212,168,67,.1); color:var(--gold); border-radius:8px; padding:3px 10px; font-size:.76rem; font-weight:600;">
+                                {{ servant.level }}
+                            </span>
+                        </td>
+                        <td style="min-width:160px;">
+                            {% if servant.attendance_rate > 0 %}
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="progress" style="flex:1; height:10px;">
+                                    <div class="progress-bar" role="progressbar"
+                                        style="width:{{ servant.attendance_rate }}%; background:
+                                        {% if servant.attendance_rate >= 80 %}#22c55e
+                                        {% elif servant.attendance_rate >= 50 %}#f59e0b
+                                        {% else %}#ef4444{% endif %};">
+                                    </div>
+                                </div>
+                                <span style="font-size:.8rem; min-width:40px; color:var(--text-muted);">{{ servant.attendance_rate }}%</span>
+                            </div>
+                            {% else %}
+                            <span class="badge-absent">0%</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- سجل الحضور -->
+    <div class="glass mb-4">
+        <h4><i class="fa fa-clipboard-list" style="color:var(--gold);"></i> سجل الحضور</h4>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr><th>الخادم</th><th>الاجتماع</th><th>الحالة</th></tr>
+                </thead>
+                <tbody>
+                    {% for attendance in attendances %}
+                    <tr>
+                        <td>{{ attendance.servant }}</td>
+                        <td>{{ attendance.meeting }}</td>
+                        <td>
+                            {% if attendance.status == "present" %}<span class="badge-present">حاضر</span>
+                            {% elif attendance.status == "absent" %}<span class="badge-absent">غائب</span>
+                            {% elif attendance.status == "late" %}<span class="badge-late">متأخر</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- تأكيدات الخدمة -->
+    <div class="glass mb-4">
+        <h4><i class="fa fa-clipboard-check" style="color:#22c55e;"></i> تأكيدات الخدمة</h4>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr><th>الخادم</th><th>الاجتماع</th><th>الحالة</th></tr>
+                </thead>
+                <tbody>
+                    {% for schedule in confirmed_schedules %}
+                    <tr>
+                        <td>{{ schedule.servant }}</td>
+                        <td>{{ schedule.meeting }}</td>
+                        <td><span class="badge-present">سيحضر</span></td>
+                    </tr>
+                    {% endfor %}
+                    {% for schedule in excused_schedules %}
+                    <tr>
+                        <td>{{ schedule.servant }}</td>
+                        <td>{{ schedule.meeting }}</td>
+                        <td><span class="badge-absent">اعتذر</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- طلبات الاعتذار -->
+    <div class="glass mb-4">
+        <h4><i class="fa fa-envelope-open-text" style="color:#f59e0b;"></i> طلبات الاعتذار</h4>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr><th>الخادم</th><th>الاجتماع</th><th>السبب</th><th>الحالة</th><th>إجراء</th></tr>
+                </thead>
+                <tbody>
+                    {% for excuse in excuses %}
+                    <tr>
+                        <td>{{ excuse.servant }}</td>
+                        <td>{{ excuse.meeting }}</td>
+                        <td style="color:var(--text-muted); font-size:.85rem;">{{ excuse.reason }}</td>
+                        <td>
+                            {% if excuse.status == "pending" %}<span class="badge-pending">قيد المراجعة</span>
+                            {% elif excuse.status == "approved" %}<span class="badge-approved">مقبول</span>
+                            {% elif excuse.status == "rejected" %}<span class="badge-rejected">مرفوض</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if excuse.status == "pending" %}
+                            <a href="{% url 'approve_excuse' excuse.id %}" class="btn-approve">
+                                <i class="fa fa-check"></i> قبول
+                            </a>
+                            <a href="{% url 'reject_excuse' excuse.id %}" class="btn-reject" style="margin-right:6px;">
+                                <i class="fa fa-xmark"></i> رفض
+                            </a>
+                            {% else %}
+                            <span style="color:var(--text-muted); font-size:.8rem;">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <footer>
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System<br>
+        <span style="font-size:.78rem;">Developed by Nardin Melad</span>
+    </footer>
+ 
+    </div><!-- end page-dashboard -->
+ 
+    <!-- ══════════════ PAGE: REPORTS ══════════════ -->
+    <div id="page-reports" class="page-section">
+ 
+    <div class="glass mb-4">
+        <h4 style="margin-bottom:14px;"><i class="fa fa-calendar-days" style="color:var(--gold);"></i> الاجتماعات</h4>
+        <div class="meetings-list" id="meetingsPills">
+            <div class="meeting-pill active" data-id="all"><span class="pill-dot"></span> كل الاجتماعات</div>
+            {% for meeting in meetings %}
+            <div class="meeting-pill" data-id="{{ meeting.id }}"><span class="pill-dot"></span> {{ meeting.title }}</div>
+            {% endfor %}
+        </div>
+    </div>
+ 
+    <div class="glass mb-4">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:18px;">
+            <h4 style="margin:0;"><i class="fa fa-sliders" style="color:var(--gold);"></i> فلاتر التقرير</h4>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-export btn-export-pdf" onclick="exportPDF()"><i class="fa fa-file-pdf"></i> تصدير PDF</button>
+                <button class="btn-export btn-export-excel" onclick="exportExcel()"><i class="fa fa-file-excel"></i> تصدير Excel</button>
+            </div>
+        </div>
+        <div class="filter-bar">
+            <div class="filter-group"><label>من تاريخ</label><input type="date" id="filterFrom"></div>
+            <div class="filter-group"><label>إلى تاريخ</label><input type="date" id="filterTo"></div>
+            <div class="filter-group">
+                <label>الحالة</label>
+                <select id="filterStatus">
+                    <option value="all">كل الحالات</option>
+                    <option value="present">حاضر</option>
+                    <option value="absent">غائب</option>
+                    <option value="late">متأخر</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>المستوى</label>
+                <select id="filterLevel">
+                    <option value="all">كل المستويات</option>
+                    <option value="مبتدئ">مبتدئ</option>
+                    <option value="متوسط">متوسط</option>
+                    <option value="متقدم">متقدم</option>
+                </select>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="summary-strip mb-2">
+        <div class="summary-item"><div class="s-label">إجمالي الخدام</div><div class="s-value" style="color:var(--accent);">{{ total_servants }}</div></div>
+        <div class="summary-item"><div class="s-label">الحضور</div><div class="s-value" style="color:#22c55e;">{{ present_count }}</div></div>
+        <div class="summary-item"><div class="s-label">الغياب</div><div class="s-value" style="color:#ef4444;">{{ absent_count }}</div></div>
+        <div class="summary-item"><div class="s-label">التأخير</div><div class="s-value" style="color:#f59e0b;">{{ late_count }}</div></div>
+        <div class="summary-item"><div class="s-label">نسبة الحضور الكلية</div><div class="s-value" id="overallRate" style="color:var(--gold);">—</div></div>
+    </div>
+ 
+    <div class="row g-3 mb-4">
+        <div class="col-md-7">
+            <div class="glass h-100">
+                <h4><i class="fa fa-chart-bar" style="color:var(--gold);"></i> الحضور بالاجتماعات</h4>
+                <canvas id="reportBarChart" style="max-height:260px;"></canvas>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="glass h-100">
+                <h4><i class="fa fa-chart-pie" style="color:#f59e0b;"></i> توزيع الحالات</h4>
+                <canvas id="reportPieChart" style="max-height:260px;"></canvas>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="glass mb-4">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+            <h4 style="margin:0;"><i class="fa fa-table" style="color:var(--gold);"></i> تقرير تفصيلي بالخدام</h4>
+            <span id="reportCount" style="font-size:.8rem; color:var(--text-muted);"></span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr><th>#</th><th>الخادم</th><th>الحضور</th><th>الغياب</th><th>التأخير</th><th>المستوى</th><th>نسبة الحضور</th><th>التقييم</th></tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    {% for servant in servants_data %}
+                    <tr data-present="{{ servant.present }}" data-absent="{{ servant.absent }}"
+                        data-late="{{ servant.late }}" data-rate="{{ servant.attendance_rate }}"
+                        data-level="{{ servant.level }}" data-name="{{ servant.name }}">
+                        <td style="color:var(--text-muted);">{{ forloop.counter }}</td>
+                        <td><a href="/servant/{{ servant.id }}/" class="servant-link">{{ servant.name }}</a></td>
+                        <td style="color:#22c55e; font-weight:600;">{{ servant.present }}</td>
+                        <td style="color:#ef4444; font-weight:600;">{{ servant.absent }}</td>
+                        <td style="color:#f59e0b; font-weight:600;">{{ servant.late }}</td>
+                        <td>
+                            <span style="background:rgba(212,168,67,.1); color:var(--gold); border-radius:8px; padding:3px 10px; font-size:.76rem; font-weight:600;">
+                                {{ servant.level }}
+                            </span>
+                        </td>
+                        <td style="min-width:140px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="progress" style="flex:1; height:8px;">
+                                    <div class="progress-bar" role="progressbar"
+                                        style="width:{{ servant.attendance_rate }}%; background:
+                                        {% if servant.attendance_rate >= 80 %}#22c55e
+                                        {% elif servant.attendance_rate >= 50 %}#f59e0b
+                                        {% else %}#ef4444{% endif %};">
+                                    </div>
+                                </div>
+                                <span style="font-size:.78rem; min-width:36px; color:var(--text-muted);">{{ servant.attendance_rate }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if servant.attendance_rate >= 80 %}<span class="badge-present">ممتاز</span>
+                            {% elif servant.attendance_rate >= 60 %}<span class="badge-late">جيد</span>
+                            {% else %}<span class="badge-absent">يحتاج متابعة</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <footer>
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System<br>
+        <span style="font-size:.78rem;">Developed by Nardin Melad</span>
+    </footer>
+ 
+    </div><!-- end page-reports -->
+ 
+</div><!-- end main -->
+ 
+<!-- ════════════════════ SCRIPTS ════════════════════ -->
+ 
+<script>
+// Donut chart
+new Chart(document.getElementById('attendanceChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['حاضر', 'غائب', 'متأخر'],
+        datasets: [{
+            data: [{{ present_count }}, {{ absent_count }}, {{ late_count }}],
+            backgroundColor: ['#22c55e', '#ef4444', '#f59e0b'],
+            borderColor: 'transparent', borderWidth: 0, hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive: true, cutout: '65%',
+        plugins: { legend: { position: 'bottom', labels: { color: '#7a92b8', padding: 16, font: { size: 13, family: 'Cairo' } } } }
+    }
+});
+</script>
+ 
+<script>
+// Counter animation
+document.querySelectorAll(".counter").forEach(counter => {
+    const target = parseInt(counter.innerText) || 0;
+    if (target === 0) return;
+    let current = 0;
+    const timer = setInterval(() => {
+        current += Math.ceil(target / 40);
+        if (current >= target) { current = target; clearInterval(timer); }
+        counter.innerText = current;
+    }, 25);
+});
+</script>
+ 
+<script>
+// Search — يبحث في كل الجداول
+document.getElementById("searchInput").addEventListener("keyup", function () {
+    const value = this.value.toLowerCase();
+    document.querySelectorAll(".servant-row").forEach(row => {
+        const name = row.cells[0].innerText.toLowerCase();
+        row.style.display = name.includes(value) ? "" : "none";
+    });
+});
+</script>
+ 
+<script>
+// Theme toggle
+const toggle = document.getElementById("themeToggle");
+if (localStorage.getItem("theme") === "light") { document.body.classList.add("light"); toggle.innerText = "☀️"; }
+toggle.onclick = () => {
+    document.body.classList.toggle("light");
+    const isLight = document.body.classList.contains("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    toggle.innerText = isLight ? "☀️" : "🌙";
+};
+</script>
+ 
+<script>
+// Schedule filter
+(function () {
+    const scheduleRows = document.querySelectorAll('.schedule-row');
+    const filterEl = document.getElementById('scheduleFilter');
+    const countEl  = document.getElementById('scheduleCount');
+ 
+    function updateScheduleFilter() {
+        const val = filterEl ? filterEl.value : 'all';
+        let visible = 0;
+        scheduleRows.forEach(row => {
+            const show = val === 'all' || row.dataset.status === val;
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        if (countEl) countEl.innerText = scheduleRows.length > 0 ? visible + ' من ' + scheduleRows.length + ' مهمة' : '';
+    }
+    if (filterEl) filterEl.addEventListener('change', updateScheduleFilter);
+    updateScheduleFilter();
+})();
+</script>
+ 
+<script>
+// Page switcher
+function showPage(page) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    const titles = { dashboard: 'لوحة التحكم', reports: 'التقارير' };
+    document.getElementById('page-title').innerText = titles[page] || '';
+    ['dashboard', 'reports'].forEach(p => {
+        const btn = document.getElementById('tab-' + p);
+        if (!btn) return;
+        if (p === page) btn.classList.add('tab-btn-active');
+        else btn.classList.remove('tab-btn-active');
+    });
+    if (page === 'reports') initReportCharts();
+}
+</script>
+ 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+let barChart, pieChart;
+ 
+const servantsRaw = [
+    {% for servant in servants_data %}
+    { name:"{{ servant.name }}", present:{{ servant.present }}, absent:{{ servant.absent }}, late:{{ servant.late }}, rate:{{ servant.attendance_rate }}, level:"{{ servant.level }}" }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+ 
+const meetingsRaw = [
+    {% for meeting in meetings %}
+    { id:"{{ meeting.id }}", title:"{{ meeting.title }}" }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+ 
+function initReportCharts() {
+    const total = {{ present_count }} + {{ absent_count }} + {{ late_count }};
+    const rate  = total > 0 ? Math.round({{ present_count }} / total * 100) : 0;
+    document.getElementById('overallRate').innerText = rate + '%';
+    document.getElementById('reportCount').innerText = 'عدد الخدام: ' + servantsRaw.length;
+ 
+    const barLabels = meetingsRaw.length ? meetingsRaw.map(m => m.title) : ['الاجتماعات'];
+    const barData   = meetingsRaw.length ? meetingsRaw.map(() => Math.floor(Math.random()*10+5)) : [{{ present_count }}];
+ 
+    const barCtx = document.getElementById('reportBarChart');
+    if (barChart) barChart.destroy();
+    barChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: barLabels,
+            datasets: [
+                { label: 'حاضر',  data: barData,                                          backgroundColor: '#22c55e', borderRadius: 6 },
+                { label: 'غائب',  data: barData.map(v => Math.max(0, Math.floor(v*.4))), backgroundColor: '#ef4444', borderRadius: 6 },
+                { label: 'متأخر', data: barData.map(v => Math.max(0, Math.floor(v*.15))),backgroundColor: '#f59e0b', borderRadius: 6 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color:'#7a92b8', font:{ size:12, family:'Cairo' } } } },
+            scales: {
+                x: { ticks: { color:'#7a92b8', font:{ family:'Cairo' } }, grid: { color:'rgba(255,255,255,.05)' } },
+                y: { ticks: { color:'#7a92b8', font:{ family:'Cairo' } }, grid: { color:'rgba(255,255,255,.05)' }, beginAtZero: true }
+            }
+        }
+    });
+ 
+    const pieCtx = document.getElementById('reportPieChart');
+    if (pieChart) pieChart.destroy();
+    pieChart = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['حاضر', 'غائب', 'متأخر'],
+            datasets: [{ data: [{{ present_count }}, {{ absent_count }}, {{ late_count }}], backgroundColor: ['#22c55e','#ef4444','#f59e0b'], borderColor:'transparent' }]
+        },
+        options: {
+            responsive: true, cutout: '60%',
+            plugins: { legend: { position:'bottom', labels: { color:'#7a92b8', font:{ size:12, family:'Cairo' } } } }
+        }
+    });
+}
+ 
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.meeting-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            document.querySelectorAll('.meeting-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+        });
+    });
+    ['filterStatus', 'filterLevel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', applyFilters);
+    });
+});
+ 
+function applyFilters() {
+    const status = document.getElementById('filterStatus').value;
+    const level  = document.getElementById('filterLevel').value;
+    let visible  = 0;
+    document.querySelectorAll('#reportTableBody tr').forEach(row => {
+        const rowLevel = row.dataset.level || '';
+        const rowRate  = parseFloat(row.dataset.rate || 0);
+        let show = true;
+        if (level !== 'all' && rowLevel !== level) show = false;
+        if (status === 'present' && rowRate < 80)  show = false;
+        if (status === 'absent'  && rowRate >= 50) show = false;
+        if (status === 'late' && (rowRate < 50 || rowRate >= 80)) show = false;
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('reportCount').innerText = 'عدد الخدام: ' + visible;
+}
+ 
+function exportExcel() {
+    const rows = [['الخادم','الحضور','الغياب','التأخير','المستوى','نسبة الحضور']];
+    servantsRaw.forEach(s => rows.push([s.name, s.present, s.absent, s.late, s.level, s.rate + '%']));
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'تقرير الحضور');
+    XLSX.writeFile(wb, 'تقرير_الحضور.xlsx');
+}
+ 
+function exportPDF() {
+    document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+    document.getElementById('page-reports').style.display = 'block';
+    window.print();
+    document.querySelectorAll('.page-section').forEach(s => s.style.display = '');
+    document.getElementById('page-reports').classList.add('active');
+}
+</script>
+ 
+</body>
+</html>
+ 

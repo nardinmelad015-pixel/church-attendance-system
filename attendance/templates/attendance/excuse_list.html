@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الاعتذارات</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#020c1e;--bg2:#0a1628;--sidebar:#060f20;--card:#0d1e38;--card-hover:#112340;--card-border:rgba(212,168,67,.12);--text:#eef2ff;--text-muted:#7a92b8;--accent:#3b82f6;--gold:#d4a843;--gold-lt:#f0cd7a;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--sb-track:#060f20;--sb-thumb:rgba(212,168,67,.25);}
+body.light{--bg:#eef4ff;--bg2:#e2ecff;--sidebar:#ffffff;--card:#ffffff;--card-hover:#f0f6ff;--card-border:rgba(37,99,235,.12);--text:#0f172a;--text-muted:#5a7aaa;--gold:#b8860b;--gold-lt:#d4a843;--sb-track:#e2ecff;--sb-thumb:rgba(37,99,235,.2);}
+*,*::before,*::after{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Cairo',sans-serif;transition:background .4s,color .4s;position:relative;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(1.5px 1.5px at 5% 4%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(2px 2px at 20% 3%,rgba(255,255,255,.9) 0%,transparent 100%),radial-gradient(1px 1px at 48% 6%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(2px 2px at 73% 5%,rgba(255,255,255,.85) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 93% 3%,rgba(255,255,255,.75) 0%,transparent 100%);animation:starsTwinkle 7s ease-in-out infinite alternate;}
+body.light::before{opacity:0;}
+@keyframes starsTwinkle{0%{opacity:.6}100%{opacity:1}}
+body::after{content:"";position:fixed;top:18px;right:280px;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fffde7,#f5d060 60%,#d4a843);box-shadow:0 0 20px 6px rgba(255,230,100,.3),0 0 55px 18px rgba(255,210,70,.12);pointer-events:none;z-index:0;animation:moonPulse 8s ease-in-out infinite;}
+body.light::after{opacity:0;}
+@keyframes moonPulse{0%,100%{box-shadow:0 0 20px 6px rgba(255,230,100,.3),0 0 55px 18px rgba(255,210,70,.12)}50%{box-shadow:0 0 28px 10px rgba(255,230,100,.5),0 0 75px 25px rgba(255,210,70,.22)}}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--sb-track);}::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:99px;}
+
+.sidebar{position:fixed;right:0;top:0;width:260px;height:100vh;background:var(--sidebar);border-left:1px solid var(--card-border);padding:0 0 24px;z-index:100;overflow-y:auto;display:flex;flex-direction:column;transition:background .4s;}
+.sidebar::before{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);flex-shrink:0;}
+.sidebar .brand{padding:22px 20px 18px;font-family:'Amiri',serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--gold);border-bottom:1px solid var(--card-border);margin-bottom:8px;}
+.sidebar a{display:flex;align-items:center;gap:11px;color:var(--text);text-decoration:none;padding:10px 20px;margin:2px 12px;border-radius:12px;font-size:.88rem;font-weight:500;transition:background .2s,color .2s,transform .2s;}
+.sidebar a i{width:18px;text-align:center;opacity:.7;}
+.sidebar a:hover{background:rgba(212,168,67,.1);color:var(--gold);transform:translateX(-3px);}
+.sidebar a.active{background:linear-gradient(90deg,rgba(212,168,67,.18),rgba(212,168,67,.06));color:var(--gold);border-right:2px solid var(--gold);}
+.sidebar a.active i,.sidebar a:hover i{opacity:1;}
+.sidebar-section{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin:16px 20px 6px;opacity:.6;}
+.sidebar-cross{margin:auto 0 0;padding:18px 20px 0;text-align:center;opacity:.12;font-size:1.5rem;color:var(--gold);border-top:1px solid var(--card-border);}
+
+.top-navbar{position:sticky;top:0;z-index:90;margin-right:260px;background:rgba(6,15,32,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--card-border);padding:10px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background .4s;}
+body.light .top-navbar{background:rgba(255,255,255,.85);}
+.brand-nav{font-family:'Amiri',serif;font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px;}
+.btn-icon{background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:.85rem;font-family:'Cairo',sans-serif;transition:background .2s,border .2s,color .2s;}
+.btn-icon:hover{background:rgba(212,168,67,.1);border-color:rgba(212,168,67,.3);color:var(--gold);}
+
+.main{margin-right:260px;padding:28px 30px 80px;min-height:100vh;position:relative;z-index:1;}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:16px;flex-wrap:wrap;}
+.topbar h2{margin:0;font-family:'Amiri',serif;font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px;}
+.topbar h2::before{content:"✦";color:var(--gold);font-size:.9rem;opacity:.7;}
+
+.breadcrumb-bar{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-muted);margin-bottom:24px;}
+.breadcrumb-bar a{color:var(--gold);text-decoration:none;}
+.breadcrumb-bar a:hover{text-decoration:underline;}
+
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px;}
+.stat-chip{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;transition:box-shadow .3s;}
+.stat-chip:hover{box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.stat-chip::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.3),transparent);}
+.chip-label{font-size:.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;}
+.chip-value{font-size:1.8rem;font-weight:900;line-height:1;}
+
+.glass{background:var(--card);border:1px solid var(--card-border);border-radius:18px;padding:22px 24px;position:relative;overflow:hidden;}
+.glass::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(212,168,67,.4),transparent);}
+
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.search-box{background:var(--bg2);border:1.5px solid var(--card-border);color:var(--text);border-radius:10px;padding:9px 14px;font-size:.88rem;outline:none;transition:border .2s,box-shadow .2s;flex:1;min-width:180px;font-family:'Cairo',sans-serif;}
+.search-box::placeholder{color:var(--text-muted);}
+.search-box:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,.15);}
+.filter-select{background:var(--bg2);border:1.5px solid var(--card-border);color:var(--text);border-radius:10px;padding:9px 14px;font-size:.88rem;outline:none;cursor:pointer;transition:border .2s;appearance:none;-webkit-appearance:none;min-width:150px;font-family:'Cairo',sans-serif;}
+.filter-select:focus{border-color:var(--gold);}
+
+.badge-pending {background:rgba(245,158,11,.14);color:#fbbf24;border-radius:8px;padding:4px 12px;font-size:.76rem;font-weight:600;white-space:nowrap;}
+.badge-approved{background:rgba(34,197,94,.14); color:#22c55e;border-radius:8px;padding:4px 12px;font-size:.76rem;font-weight:600;white-space:nowrap;}
+.badge-rejected{background:rgba(239,68,68,.14); color:#f87171;border-radius:8px;padding:4px 12px;font-size:.76rem;font-weight:600;white-space:nowrap;}
+
+.table{color:var(--text);margin:0;}
+.table th{color:var(--text-muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;border-color:var(--card-border);font-weight:700;padding:12px 14px;white-space:nowrap;}
+.table td{border-color:var(--card-border);vertical-align:middle;padding:12px 14px;font-size:.88rem;}
+.table tbody tr{transition:background .2s;}
+.table tbody tr:hover{background:rgba(212,168,67,.04);}
+
+.servant-cell{display:flex;align-items:center;gap:10px;}
+.avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;background:rgba(212,168,67,.15);color:var(--gold);}
+
+.btn-approve{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.22);border-radius:8px;padding:5px 12px;font-size:.78rem;font-family:'Cairo',sans-serif;text-decoration:none;font-weight:600;transition:background .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-approve:hover{background:rgba(34,197,94,.2);color:#22c55e;}
+.btn-reject{background:rgba(239,68,68,.08);color:#f87171;border:1px solid rgba(239,68,68,.22);border-radius:8px;padding:5px 12px;font-size:.78rem;font-family:'Cairo',sans-serif;text-decoration:none;font-weight:600;transition:background .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-reject:hover{background:rgba(239,68,68,.18);color:#f87171;}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted);}
+.empty-state i{font-size:2.5rem;margin-bottom:14px;display:block;opacity:.25;}
+.empty-state p{margin:0;font-size:.9rem;}
+
+.results-info{font-size:.82rem;color:var(--text-muted);margin-top:16px;}
+
+.reason-text{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;display:block;color:var(--text-muted);}
+
+footer{text-align:center;margin-top:50px;padding-bottom:20px;color:var(--text-muted);font-size:.82rem;}
+.footer-cross{display:block;color:var(--gold);opacity:.35;font-size:.9rem;margin-bottom:6px;letter-spacing:.2em;}
+
+@media(max-width:768px){.sidebar{display:none;}.top-navbar,.main{margin-right:0;}.main{padding:16px;}.reason-text{max-width:100px;}}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="brand"><i class="fa fa-church"></i> Church System</div>
+    <div class="sidebar-section">القائمة الرئيسية</div>
+    <a href="/dashboard/"><i class="fa fa-chart-line"></i> Dashboard</a>
+    <a href="/attendance/add/"><i class="fa fa-calendar-plus"></i> تسجيل حضور</a>
+    <a href="/attendance/list/"><i class="fa fa-calendar-check"></i> سجل الحضور</a>
+    <a href="/schedule/add/"><i class="fa fa-calendar-check"></i> جدول التحضير</a>
+
+    <div class="sidebar-section">الإدارة</div>
+    <a href="/excuse/list/" class="active"><i class="fa fa-file-circle-xmark"></i> الأعذار</a>
+    <a href="/servants/"><i class="fa fa-users"></i> الخدام</a>
+    <a href="/meetings/"><i class="fa fa-calendar-days"></i>الاجتماعات</a>
+    <div class="sidebar-cross">✦ ✝ ✦</div>
+</div>
+
+<div class="top-navbar">
+    <div class="brand-nav">⛪ Church Attendance System</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+        <button id="themeToggle" class="btn-icon">🌙</button>
+    </div>
+</div>
+
+<div class="main">
+
+    <div class="topbar">
+        <h2>الاعتذارات</h2>
+        <div></div>
+    </div>
+
+    <div class="breadcrumb-bar">
+        <a href="/dashboard/"><i class="fa fa-house"></i> Dashboard</a>
+        <i class="fa fa-chevron-left"></i>
+        <span>الاعتذارات</span>
+    </div>
+
+    <div class="stats-strip">
+        <div class="stat-chip">
+            <span class="chip-label">إجمالي الأعذار</span>
+            <span class="chip-value" id="totalCount" style="color:var(--gold);">0</span>
+        </div>
+        <div class="stat-chip">
+            <span class="chip-label">قيد المراجعة</span>
+            <span class="chip-value" id="pendingCount" style="color:#fbbf24;">0</span>
+        </div>
+        <div class="stat-chip">
+            <span class="chip-label">مقبولة</span>
+            <span class="chip-value" id="approvedCount" style="color:#22c55e;">0</span>
+        </div>
+        <div class="stat-chip">
+            <span class="chip-label">مرفوضة</span>
+            <span class="chip-value" id="rejectedCount" style="color:#ef4444;">0</span>
+        </div>
+    </div>
+
+    <div class="glass">
+        <div class="toolbar">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍  ابحث بالاسم أو الاجتماع...">
+            <select id="filterStatus" class="filter-select">
+                <option value="all">كل الحالات</option>
+                <option value="pending">قيد المراجعة</option>
+                <option value="approved">مقبول</option>
+                <option value="rejected">مرفوض</option>
+            </select>
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table class="table table-hover" id="excuseTable">
+                <thead>
+                    <tr>
+                        <th>#</th><th>الخادم</th><th>الاجتماع</th>
+                        <th>السبب</th><th>الحالة</th><th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="excuseBody">
+                    {% for excuse in excuses %}
+                    <tr class="excuse-row"
+                        data-status="{{ excuse.status }}"
+                        data-servant="{{ excuse.servant.name|lower }}"
+                        data-meeting="{{ excuse.meeting|lower }}">
+                        <td style="color:var(--text-muted);">{{ forloop.counter }}</td>
+                        <td>
+                            <div class="servant-cell">
+                                <div class="avatar">{{ excuse.servant.name|first|upper }}</div>
+                                {{ excuse.servant.name }}
+                            </div>
+                        </td>
+                        <td style="color:var(--text-muted);">{{ excuse.meeting }}</td>
+                        <td><span class="reason-text" title="{{ excuse.reason }}">{{ excuse.reason }}</span></td>
+                        <td>
+                            {% if excuse.status == "pending" %}<span class="badge-pending"><i class="fa fa-clock"></i> قيد المراجعة</span>
+                            {% elif excuse.status == "approved" %}<span class="badge-approved"><i class="fa fa-circle-check"></i> مقبول</span>
+                            {% elif excuse.status == "rejected" %}<span class="badge-rejected"><i class="fa fa-circle-xmark"></i> مرفوض</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if excuse.status == "pending" %}
+                            <div style="display:flex;gap:7px;flex-wrap:wrap;">
+                                <a href="{% url 'approve_excuse' excuse.id %}" class="btn-approve"><i class="fa fa-check"></i> قبول</a>
+                                <a href="{% url 'reject_excuse' excuse.id %}" class="btn-reject"><i class="fa fa-xmark"></i> رفض</a>
+                            </div>
+                            {% else %}<span style="color:var(--text-muted);font-size:.82rem;">—</span>{% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6"><div class="empty-state"><i class="fa fa-folder-open"></i><p>لا توجد اعتذارات مسجّلة</p></div></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="results-info" id="resultsInfo"></div>
+    </div>
+
+    <footer>
+        <span class="footer-cross">✦ ✝ ✦</span>
+        Church Attendance System<br>
+        <span style="font-size:.78rem;">Developed by Nardin Melad</span>
+    </footer>
+</div>
+
+<script>
+const rows = document.querySelectorAll('.excuse-row');
+let pending=0,approved=0,rejected=0;
+rows.forEach(r=>{const s=r.dataset.status;if(s==='pending')pending++;if(s==='approved')approved++;if(s==='rejected')rejected++;});
+document.getElementById('totalCount').innerText=rows.length;
+document.getElementById('pendingCount').innerText=pending;
+document.getElementById('approvedCount').innerText=approved;
+document.getElementById('rejectedCount').innerText=rejected;
+
+function animateCounter(el,target){let c=0;if(!target)return;const t=setInterval(()=>{c+=Math.ceil(target/30);if(c>=target){c=target;clearInterval(t);}el.innerText=c;},20);}
+['totalCount','pendingCount','approvedCount','rejectedCount'].forEach(id=>{const el=document.getElementById(id);animateCounter(el,parseInt(el.innerText));});
+
+function applyFilters(){
+    const search=document.getElementById('searchInput').value.toLowerCase();
+    const status=document.getElementById('filterStatus').value;
+    let visible=0;
+    rows.forEach(row=>{
+        const servant=row.dataset.servant||'';
+        const meeting=row.dataset.meeting||'';
+        const rowStatus=row.dataset.status||'';
+        const matchSearch=servant.includes(search)||meeting.includes(search);
+        const matchStatus=status==='all'||rowStatus===status;
+        row.style.display=(matchSearch&&matchStatus)?'':'none';
+        if(matchSearch&&matchStatus)visible++;
+    });
+    const info=document.getElementById('resultsInfo');
+    if(rows.length>0)info.innerText='يعرض '+visible+' من أصل '+rows.length+' عذر';
+}
+document.getElementById('searchInput').addEventListener('keyup',applyFilters);
+document.getElementById('filterStatus').addEventListener('change',applyFilters);
+applyFilters();
+</script>
+<script>
+const toggle=document.getElementById("themeToggle");
+if(localStorage.getItem("theme")==="light"){document.body.classList.add("light");toggle.innerText="☀️";}
+toggle.onclick=()=>{document.body.classList.toggle("light");const isLight=document.body.classList.contains("light");localStorage.setItem("theme",isLight?"light":"dark");toggle.innerText=isLight?"☀️":"🌙";};
+</script>
+</body>
+</html>

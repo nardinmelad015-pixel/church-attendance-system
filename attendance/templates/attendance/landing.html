@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مهرجان الكنيسة</title>
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+<body class="night-mode">
+
+  <!-- Day/Night Toggle -->
+  <button class="day-night-toggle" id="dayNightToggle" title="تبديل الوضع">
+    <span class="toggle-icon">☀️</span>
+  </button>
+
+  <!-- Sky Layer -->
+  <div class="sky" id="sky">
+    <!-- Stars -->
+    <div class="stars-layer" id="starsLayer"></div>
+
+    <!-- Moon -->
+    <div class="moon" id="moon">
+      <div class="moon-crater c1"></div>
+      <div class="moon-crater c2"></div>
+      <div class="moon-crater c3"></div>
+      <div class="moon-glow"></div>
+    </div>
+
+    <!-- Sun -->
+    <div class="sun" id="sun">
+      <div class="sun-core"></div>
+      <div class="sun-ray r1"></div>
+      <div class="sun-ray r2"></div>
+      <div class="sun-ray r3"></div>
+      <div class="sun-ray r4"></div>
+      <div class="sun-ray r5"></div>
+      <div class="sun-ray r6"></div>
+      <div class="sun-ray r7"></div>
+      <div class="sun-ray r8"></div>
+    </div>
+
+    <!-- Clouds -->
+    <div class="cloud cloud-1" id="cloud1">
+      <div class="cloud-puff p1"></div>
+      <div class="cloud-puff p2"></div>
+      <div class="cloud-puff p3"></div>
+      <div class="cloud-puff p4"></div>
+    </div>
+    <div class="cloud cloud-2" id="cloud2">
+      <div class="cloud-puff p1"></div>
+      <div class="cloud-puff p2"></div>
+      <div class="cloud-puff p3"></div>
+    </div>
+    <div class="cloud cloud-3" id="cloud3">
+      <div class="cloud-puff p1"></div>
+      <div class="cloud-puff p2"></div>
+      <div class="cloud-puff p3"></div>
+      <div class="cloud-puff p4"></div>
+    </div>
+  </div>
+
+  <!-- Ground / Scene -->
+  <div class="scene" id="scene">
+
+    <!-- Church CSS Drawing -->
+    <div class="church" id="church">
+
+      <!-- Bell Tower Left -->
+      <div class="tower tower-left">
+        <div class="tower-top">
+          <div class="cross">
+            <div class="cross-v"></div>
+            <div class="cross-h"></div>
+          </div>
+          <div class="steeple"></div>
+        </div>
+        <div class="tower-body">
+          <div class="tower-window">
+            <div class="window-glass tw-glass"></div>
+          </div>
+          <div class="tower-arch-top"></div>
+        </div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="church-body">
+        <!-- Roof -->
+        <div class="church-roof"></div>
+        <!-- Facade -->
+        <div class="church-facade">
+          <!-- Rose Window -->
+          <div class="rose-window">
+            <div class="rose-center"></div>
+            <div class="rose-petal rp1"></div>
+            <div class="rose-petal rp2"></div>
+            <div class="rose-petal rp3"></div>
+            <div class="rose-petal rp4"></div>
+            <div class="rose-petal rp5"></div>
+            <div class="rose-petal rp6"></div>
+            <div class="rose-petal rp7"></div>
+            <div class="rose-petal rp8"></div>
+            <div class="rose-ring"></div>
+          </div>
+
+          <!-- Three Arched Windows -->
+          <div class="facade-windows">
+            <div class="arch-window aw1">
+              <div class="arch-glass window-glow"></div>
+              <div class="arch-keystone"></div>
+            </div>
+            <div class="arch-window aw2">
+              <div class="arch-glass window-glow"></div>
+              <div class="arch-keystone"></div>
+            </div>
+            <div class="arch-window aw3">
+              <div class="arch-glass window-glow"></div>
+              <div class="arch-keystone"></div>
+            </div>
+          </div>
+
+          <!-- Door -->
+          <div class="church-door">
+            <div class="door-arch"></div>
+            <div class="door-panel left-panel"></div>
+            <div class="door-panel right-panel"></div>
+            <div class="door-handle lh"></div>
+            <div class="door-handle rh"></div>
+            <div class="door-steps">
+              <div class="step s1"></div>
+              <div class="step s2"></div>
+              <div class="step s3"></div>
+            </div>
+          </div>
+
+          <!-- Columns -->
+          <div class="columns">
+            <div class="col c1"></div>
+            <div class="col c2"></div>
+            <div class="col c3"></div>
+            <div class="col c4"></div>
+          </div>
+
+          <!-- Decorative stripe -->
+          <div class="facade-stripe"></div>
+        </div>
+      </div>
+
+      <!-- Bell Tower Right -->
+      <div class="tower tower-right">
+        <div class="tower-top">
+          <div class="cross">
+            <div class="cross-v"></div>
+            <div class="cross-h"></div>
+          </div>
+          <div class="steeple"></div>
+        </div>
+        <div class="tower-body">
+          <div class="tower-window">
+            <div class="window-glass tw-glass"></div>
+          </div>
+          <div class="tower-arch-top"></div>
+        </div>
+      </div>
+
+    </div><!-- /church -->
+
+    <!-- Ground -->
+    <div class="ground"></div>
+
+  </div><!-- /scene -->
+
+  <!-- Main Card -->
+  <div class="main-content">
+    <div class="glass-card" id="glassCard">
+
+      <!-- Logos Row -->
+      <div class="logos-row">
+        <div class="logo-slot church-logo" title="لوجو الكنيسة">
+          <div class="logo-placeholder">
+            <span class="logo-icon">⛪</span>
+            <span class="logo-label">الكنيسة</span>
+          </div>
+        </div>
+        <div class="logo-slot project-logo" title="لوجو المشروع">
+          <div class="logo-placeholder main-logo-placeholder">
+            <span class="logo-icon">✝️</span>
+            <span class="logo-label">المشروع</span>
+          </div>
+        </div>
+        <div class="logo-slot festival-logo" title="لوجو المهرجان">
+          <div class="logo-placeholder">
+            <span class="logo-icon">🎖️</span>
+            <span class="logo-label">المهرجان</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="card-header">
+        <div class="header-eyebrow">نظام إدارة متكامل</div>
+        <h1 class="card-title">مهرجان <span class="accent">الكنيسة</span></h1>
+        <div class="title-divider">
+          <span class="div-line"></span>
+          <span class="div-cross">✦</span>
+          <span class="div-line"></span>
+        </div>
+      </div>
+
+      <!-- System Overview -->
+      <div class="system-overview">
+        <h2 class="section-title">نبذة عن النظام</h2>
+        <p class="overview-text">
+          منصة متكاملة لإدارة فعاليات ومهرجانات الكنيسة — تنظيم الخدمة
+          متابعة الخدام، إدارة البرامج، وتقارير لحظية شاملة في مكان واحد.
+        </p>
+        <div class="features-grid">
+          <div class="feature-item">
+            <span class="feature-icon">📋</span>
+            <span class="feature-text">إدارة البرامج</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">👥</span>
+            <span class="feature-text">المتطوعون</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🎫</span>
+            <span class="feature-text">الحجوزات</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📊</span>
+            <span class="feature-text">التقارير</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🔔</span>
+            <span class="feature-text">الإشعارات</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🔒</span>
+            <span class="feature-text">الأمان</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <button class="start-btn" id="startBtn">
+          <span class="btn-bg"></span>
+          <span class="btn-content">
+            <span class="btn-icon">🚀</span>
+            
+<a href="/login/" class="start-btn" id="startBtn">
+
+<span class="btn-text">
+
+ابدأ الآن
+
+</span>
+            <span class="btn-arrow">←</span>
+          </span>
+          <span class="btn-shine"></span>
+        </button>
+        <p class="cta-hint">سجّل دخولك وابدأ إدارة المهرجان بكل سهولة</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="{% static 'js/landing.js' %}"></script>
+</body>
+</html>
